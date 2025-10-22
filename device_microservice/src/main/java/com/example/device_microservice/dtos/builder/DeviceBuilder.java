@@ -10,7 +10,7 @@ public class DeviceBuilder {
     }
 
     public static DeviceDTO toDeviceDTO(Device device) {
-        return new DeviceDTO(device.getId(), device.getManufacturer(), device.getModel(), device.getMaxConsVal());
+        return new DeviceDTO(device.getId(), device.getManufacturer(), device.getMaxConsVal());
     }
 
     public static DeviceDetailsDTO toDeviceDetailsDTO(Device device) {

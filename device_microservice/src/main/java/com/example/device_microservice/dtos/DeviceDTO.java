@@ -6,17 +6,15 @@ import java.util.UUID;
 public class DeviceDTO {
     private UUID id;
     private String manufacturer;
-    private String model;
     private int maxConsVal;
 
     public DeviceDTO() {
 
     }
 
-    public DeviceDTO(UUID id, String manufacturer, String model, int maxConsVal) {
+    public DeviceDTO(UUID id, String manufacturer, int maxConsVal) {
         this.id = id;
         this.manufacturer = manufacturer;
-        this.model = model;
         this.maxConsVal = maxConsVal;
     }
 
@@ -36,14 +34,6 @@ public class DeviceDTO {
         this.manufacturer = manufacturer;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public int getMaxConsVal() {
         return maxConsVal;
     }
@@ -57,9 +47,7 @@ public class DeviceDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeviceDTO that = (DeviceDTO) o;
-        return maxConsVal == that.maxConsVal &&
-                Objects.equals(manufacturer, that.manufacturer) &&
-                Objects.equals(model, that.model);
+        return maxConsVal == that.maxConsVal && Objects.equals(manufacturer, that.manufacturer);
     }
 
     @Override
