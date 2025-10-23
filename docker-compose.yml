@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  user_microservice:
+    image: user_microservice:latest
+    container_name: user_microservice
+    environment:
+      DB_IP: db-user
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DBNAME: userDB
+    networks:
+      - proxy-network
+      - user-db-network
+    depends_on:
+      - db-user
+
+  db-user:
+    image: postgres
+    container_name: db-user
+    environment:
+      POSTGRES_DB: userDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    networks:
+      - user-db-network
+    ports:
+      - "5432:5432"
+
+  device_microservice:
+    container_name: device_microservice
+    image: device_microservice:latest
+    environment:
+      DB_IP: db-device
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DBNAME: deviceDB
+    networks:
+      - proxy-network
+      - device-db-network
+    depends_on:
+      - db-device
+
+  db-device:
+    image: postgres
+    container_name: db-device
+    environment:
+      POSTGRES_DB: deviceDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    networks:
+      - device-db-network
+    ports:
+      - "5433:5432"
+
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:8080" # Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./dynamic:/etc/traefik/dynamic:ro"
+      - "./logs:/var/log/traefik"
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    driver: bridge
+    name: proxy-network
+  user-db-network:
+    driver: bridge
+  device-db-network:
+    driver: bridge

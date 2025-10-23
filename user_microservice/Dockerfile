@@ -13,6 +13,6 @@ RUN mvn clean install -DskipTests
 
 FROM openjdk:21-jdk
 WORKDIR /user_microservice
-COPY --from=build /user_microservice/target/user_microservice-0.0.1-SNAPSHOT.jar /user_service/user_service.jar
+COPY --from=build /user_microservice/target/user_microservice-0.0.1-SNAPSHOT.jar /user_microservice/user_microservice.jar
 EXPOSE 8080
 CMD ["java", "-jar", "user_microservice.jar"]
