@@ -8,6 +8,6 @@ public class DeviceMicroserviceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DeviceMicroserviceApplication.class, args);
-    }
 
+    }
 }

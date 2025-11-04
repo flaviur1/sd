@@ -16,6 +16,8 @@ public class DeviceDetailsDTO {
     @NotBlank(message = "maximum consumption value is required")
     private int maxConsVal;
 
+    private UUID userId;
+
     public DeviceDetailsDTO() {
     }
 
@@ -62,6 +64,14 @@ public class DeviceDetailsDTO {
 
     public void setMaxConsVal(int maxConsVal) {
         this.maxConsVal = maxConsVal;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     @Override

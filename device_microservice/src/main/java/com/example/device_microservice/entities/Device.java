@@ -30,8 +30,10 @@ public class Device implements Serializable {
     @Column(name = "max consumption", nullable = false)
     private int maxConsVal;
 
-    public Device() {
+    @Column(name = "user id")
+    private UUID userId;
 
+    public Device() {
     }
 
     public Device(String manufacturer, String model, int maxConsVal) {
@@ -70,5 +72,13 @@ public class Device implements Serializable {
 
     public void setMaxConsVal(int maxConsVal) {
         this.maxConsVal = maxConsVal;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }
