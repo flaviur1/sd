@@ -21,17 +21,19 @@ public class DeviceDetailsDTO {
     public DeviceDetailsDTO() {
     }
 
-    public DeviceDetailsDTO(String manufacturer, String model, int maxConsVal) {
+    public DeviceDetailsDTO(String manufacturer, String model, int maxConsVal, UUID userId) {
         this.manufacturer = manufacturer;
         this.model = model;
         this.maxConsVal = maxConsVal;
+        this.userId = userId;
     }
 
-    public DeviceDetailsDTO(UUID id, String manufacturer, String model, int maxConsVal) {
+    public DeviceDetailsDTO(UUID id, String manufacturer, String model, int maxConsVal, UUID userId) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
         this.maxConsVal = maxConsVal;
+        this.userId = userId;
     }
 
     public UUID getId() {

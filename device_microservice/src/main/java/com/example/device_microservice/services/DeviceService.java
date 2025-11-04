@@ -70,7 +70,7 @@ public class DeviceService {
 
     public UUID insert(DeviceDetailsDTO deviceDetailsDTO) {
         Device device = DeviceBuilder.toEntity(deviceDetailsDTO);
-        checkIfUserExists(device.getUserId());
+        checkIfUserExists(deviceDetailsDTO.getUserId());
         device = deviceRepository.save(device);
         LOGGER.debug("Device with id {} was inserted in database", device.getId());
         return device.getId();

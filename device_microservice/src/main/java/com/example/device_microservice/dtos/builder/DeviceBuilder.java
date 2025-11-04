@@ -14,9 +14,10 @@ public class DeviceBuilder {
     }
 
     public static DeviceDetailsDTO toDeviceDetailsDTO(Device device) {
-        return new DeviceDetailsDTO(device.getId(), device.getManufacturer(), device.getModel(), device.getMaxConsVal());
+        return new DeviceDetailsDTO(device.getId(), device.getManufacturer(), device.getModel(), device.getMaxConsVal(), device.getUserId());
     }
 
     public static Device toEntity(DeviceDetailsDTO deviceDetailsDTO) {
-        return new Device(deviceDetailsDTO.getManufacturer(), deviceDetailsDTO.getModel(), deviceDetailsDTO.getMaxConsVal());    }
+        return new Device(deviceDetailsDTO.getManufacturer(), deviceDetailsDTO.getModel(), deviceDetailsDTO.getMaxConsVal(), deviceDetailsDTO.getUserId());
+    }
 }

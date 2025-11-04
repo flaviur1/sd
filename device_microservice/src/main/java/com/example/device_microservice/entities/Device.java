@@ -36,10 +36,11 @@ public class Device implements Serializable {
     public Device() {
     }
 
-    public Device(String manufacturer, String model, int maxConsVal) {
+    public Device(String manufacturer, String model, int maxConsVal, UUID userID) {
         this.manufacturer = manufacturer;
         this.model = model;
         this.maxConsVal = maxConsVal;
+        this.userId = userID;
     }
 
     public UUID getId() {
