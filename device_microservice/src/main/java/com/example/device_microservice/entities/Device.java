@@ -27,10 +27,10 @@ public class Device implements Serializable {
     @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "max consumption", nullable = false)
+    @Column(name = "max_consumption", nullable = false)
     private int maxConsVal;
 
-    @Column(name = "user id")
+    @Column(name = "user_id")
     private UUID userId;
 
     public Device() {

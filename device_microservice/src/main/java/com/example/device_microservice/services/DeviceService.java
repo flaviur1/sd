@@ -88,6 +88,7 @@ public class DeviceService {
         d.setManufacturer(device.getManufacturer());
         d.setModel(device.getModel());
         d.setMaxConsVal(device.getMaxConsVal());
+        d.setUserId(device.getUserId());
         deviceRepository.save(d);
         return DeviceBuilder.toDeviceDetailsDTO(d);
     }
