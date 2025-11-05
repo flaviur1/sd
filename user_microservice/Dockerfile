@@ -11,7 +11,7 @@ COPY ./src/ /user_microservice/src
 WORKDIR /user_microservice
 RUN mvn clean install -DskipTests
 
-FROM openjdk:21-jdk
+FROM eclipse-temurin:21
 WORKDIR /user_microservice
 COPY --from=build /user_microservice/target/user_microservice-0.0.1-SNAPSHOT.jar /user_microservice/user_microservice.jar
 EXPOSE 8080

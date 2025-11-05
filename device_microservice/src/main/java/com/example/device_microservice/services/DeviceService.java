@@ -9,12 +9,13 @@ import com.example.device_microservice.repositories.DeviceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClientException;
-import reactor.core.publisher.Mono;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,12 +25,12 @@ import java.util.stream.Collectors;
 public class DeviceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceService.class);
     private final DeviceRepository deviceRepository;
-    private final WebClient webClient;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public DeviceService(DeviceRepository deviceRepository) {
+    public DeviceService(DeviceRepository deviceRepository, RestTemplateBuilder restTemplateBuilder) {
         this.deviceRepository = deviceRepository;
-        this.webClient = WebClient.create();
+        this.restTemplate = restTemplateBuilder.build();
     }
 
     public List<DeviceDTO> getAllDevices() {
@@ -50,19 +51,14 @@ public class DeviceService {
 
     private void checkIfUserExists(UUID id) {
         if (id != null) {
+            URI uri = UriComponentsBuilder.fromUriString("http://user-microservice:8080")
+                    .path("/users/{id}")
+                    .buildAndExpand(id)
+                    .toUri();
+
             try {
-                this.webClient.get()
-                        .uri("http://user_microservice:8080/api/users/" + id) // Call the User Microservice endpoint
-                        .retrieve()
-                        .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
-                            // If 404 is returned, this block executes
-                            LOGGER.error("User with id {} was not found for device assignment.", id);
-                            return Mono.error(new ResourceNotFoundException("User with id: " + id));
-                        })
-                        .bodyToMono(Void.class) // We only care if the call succeeded or failed
-                        .block(); // BLOCKING CALL: Enforces the synchronous request-reply
+                this.restTemplate.getForEntity(uri, Void.class);
             } catch (WebClientException e) {
-                // Handle connection or other WebClient errors
                 throw new RuntimeException("Could not connect to User Microservice for validation.", e);
             }
         }

@@ -11,7 +11,7 @@ COPY ./src/ /device_microservice/src
 WORKDIR /device_microservice
 RUN mvn clean install -DskipTests
 
-FROM openjdk:21-jdk
+FROM eclipse-temurin:21
 WORKDIR /device_microservice
 COPY --from=build /device_microservice/target/device_microservice-0.0.1-SNAPSHOT.jar /device_microservice/device_microservice.jar
 EXPOSE 8080

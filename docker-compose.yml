@@ -2,8 +2,8 @@ version: "3.9"
 
 services:
   user_microservice:
-    image: user_microservice:latest
-    container_name: user_microservice
+    image: user-service:latest
+    container_name: user-microservice
     environment:
       DB_IP: db-user
       DB_PORT: 5432
@@ -29,8 +29,8 @@ services:
       - "5432:5432"
 
   device_microservice:
-    container_name: device_microservice
-    image: device_microservice:latest
+    container_name: device-service
+    image: device-service:latest
     environment:
       DB_IP: db-device
       DB_PORT: 5432
