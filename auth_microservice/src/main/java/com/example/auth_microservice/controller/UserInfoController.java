@@ -7,14 +7,11 @@ import com.example.auth_microservice.service.JwtService;
 import com.example.auth_microservice.service.UserInfoService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class UserInfoController {
 
@@ -24,14 +21,10 @@ public class UserInfoController {
 
     private AuthenticationManager authenticationManager;
 
-    public UserInfoController(UserInfoService service, JwtService jwtService, AuthenticationManagerBuilder authenticationManager) {
+    public UserInfoController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.service = service;
         this.jwtService = jwtService;
-        try {
-            this.authenticationManager = authenticationManager.build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.authenticationManager = authenticationManager;
 
     }
 
@@ -40,12 +33,10 @@ public class UserInfoController {
         return "Welcome this endpoint is not secure";
     }
 
-    @PostMapping("/addNewUser")
+    @PostMapping("/register")
     public String addNewUser(@RequestBody UserInfo userInfo) {
         return service.addUser(userInfo);
     }
-
-    // Removed the role checks here as they are already managed in SecurityConfig
 
     @PostMapping("/generateToken")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
@@ -59,8 +50,17 @@ public class UserInfoController {
         }
     }
 
-/*    @PostMapping("/validateToken")
-    public ResponseEntity<> validateToken() {
+    /*    @PostMapping("/validateToken")
+        public ResponseEntity<> validateToken() {
 
-    }*/
+        }*/
+    @GetMapping("/user/profile")
+    public String userProfile() {
+        return "Welcome to User Profile";
+    }
+
+    @GetMapping("/admin/profile")
+    public String adminProfile() {
+        return "Welcome to Admin Profile";
+    }
 }

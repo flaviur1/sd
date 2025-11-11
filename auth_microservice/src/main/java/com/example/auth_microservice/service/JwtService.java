@@ -1,7 +1,6 @@
 package com.example.auth_microservice.service;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -20,9 +19,8 @@ import java.util.function.Function;
 public class JwtService {
 
     private String SECRET; // pune in docker compose ca env var la toate serviciile
-    //schimba din .env
 
-    public JwtService(@Value("JWT_SECRET") String SECRET) {
+    public JwtService(@Value("${JWT_SECRET}") String SECRET) {
         this.SECRET = SECRET;
     }
 

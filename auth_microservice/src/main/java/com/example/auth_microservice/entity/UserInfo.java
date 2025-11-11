@@ -1,13 +1,12 @@
 package com.example.auth_microservice.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
