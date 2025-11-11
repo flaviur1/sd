@@ -10,6 +10,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: admin
       DB_DBNAME: userDB
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - proxy-network
       - user-db-network
@@ -37,6 +38,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: admin
       DB_DBNAME: deviceDB
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - proxy-network
       - device-db-network

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -52,13 +51,13 @@ public class DeviceService {
     private void checkIfUserExists(UUID id) {
         if (id != null) {
             URI uri = UriComponentsBuilder.fromUriString("http://user-microservice:8080")
-                    .path("/users/{id}")
+                    .path("/api/users/{id}")
                     .buildAndExpand(id)
                     .toUri();
 
             try {
                 this.restTemplate.getForEntity(uri, Void.class);
-            } catch (WebClientException e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Could not connect to User Microservice for validation.", e);
             }
         }
