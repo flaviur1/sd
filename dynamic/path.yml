@@ -17,6 +17,14 @@ http:
         - strip-api-prefix
       service: device_microservice
 
+    auth-microservice-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/auth`)"
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+      service: auth_microservice0
+
   middlewares:
     strip-api-prefix: # Middleware to remove /api prefix
       stripPrefix:
@@ -38,3 +46,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://device_microservice:8080"
+
+    auth_microservice:
+      loadBalancer:
+        servers:
+          - url: "http://auth_microservice:8080"
