@@ -23,7 +23,7 @@ http:
         - web
       middlewares:
         - strip-api-prefix
-      service: auth_microservice0
+      service: auth_microservice
 
   middlewares:
     strip-api-prefix: # Middleware to remove /api prefix

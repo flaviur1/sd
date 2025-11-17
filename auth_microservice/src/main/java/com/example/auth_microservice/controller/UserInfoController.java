@@ -22,21 +22,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class UserInfoController {
 
-    private UserInfoService service;
+    private final UserInfoService userInfoService;
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
-    private final UserInfoService userInfoService;
 
     public UserInfoController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager, UserInfoService userInfoService) {
-        this.service = service;
+        this.userInfoService = userInfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-        this.userInfoService = userInfoService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserInfo userInfo) {
-        return ResponseEntity.ok(service.addUser(userInfo));
+        return ResponseEntity.ok(userInfoService.addUser(userInfo));
     }
 
     @PostMapping("/login")
