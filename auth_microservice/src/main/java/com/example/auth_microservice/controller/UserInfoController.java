@@ -26,7 +26,7 @@ public class UserInfoController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
 
-    public UserInfoController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager, UserInfoService userInfoService) {
+    public UserInfoController(UserInfoService userInfoService, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userInfoService = userInfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
