@@ -14,7 +14,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private TokenValidationFilter tokenValidationFilter;
+    private final TokenValidationFilter tokenValidationFilter;
+
+    public SecurityConfig(TokenValidationFilter tokenValidationFilter){
+        this.tokenValidationFilter = tokenValidationFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -23,7 +23,6 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     private final RestTemplate restTemplate;
     private final String AUTH_VALIDATE_URL = "http://auth_microservice:8080/auth/validate";
 
-    @Autowired
     public TokenValidationFilter(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
@@ -31,7 +30,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain) throws IOException {
 
         final String authHeader = request.getHeader("Authorization");
 
