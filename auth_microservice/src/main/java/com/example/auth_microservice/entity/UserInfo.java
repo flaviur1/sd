@@ -14,8 +14,6 @@ import java.util.UUID;
 public class UserInfo {
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
     private String username;

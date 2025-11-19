@@ -46,11 +46,13 @@ public class UserInfoController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
-        UserInfo userInfo = new UserInfo(registerRequest.getUsername(), registerRequest.getPassword(), "ROLE_USER");
+        UUID id = UUID.randomUUID();
+        UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), "ROLE_USER");
         userInfoService.addUser(userInfo);
 
         try {
             Map<String, Object> userProfile = new HashMap<>();
+            userProfile.put("id", id);
             userProfile.put("name", registerRequest.getUsername());
             userProfile.put("address", registerRequest.getAddress());
             userProfile.put("age", registerRequest.getAge());

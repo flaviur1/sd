@@ -39,9 +39,7 @@ public class DeviceController {
         if (isAdmin) {
             return ResponseEntity.ok(deviceService.getAllDevices());
         } else {
-            String username = authentication.getName();
-            UUID currentUserId = authentication.
-
+            UUID currentUserId = (UUID) authentication.getPrincipal();
             return ResponseEntity.ok(deviceService.getAllDevicesForUserId(currentUserId));
         }
     }
@@ -73,7 +71,7 @@ public class DeviceController {
     }
 
     @GetMapping("/getFor/{id}")
-    public ResponseEntity<List<DeviceDetailsDTO>> getAllDevicesForUserId(@PathVariable UUID id){
+    public ResponseEntity<List<DeviceDTO>> getAllDevicesForUserId(@PathVariable UUID id) {
         return ResponseEntity.ok(deviceService.getAllDevicesForUserId(id));
     }
 }

@@ -16,8 +16,6 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
@@ -34,7 +32,8 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name, String address, int age) {
+    public User(UUID id, String name, String address, int age) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.age = age;
