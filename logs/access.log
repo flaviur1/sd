@@ -172,3 +172,7 @@
 172.21.0.1 - - [18/Nov/2025:23:09:15 +0000] "POST /api/devices HTTP/1.1" 500 46 "-" "-" 4 "device-microservice-router@file" "http://device_microservice:8080" 151ms
 172.21.0.1 - - [18/Nov/2025:23:09:22 +0000] "POST /api/users HTTP/1.1" 500 46 "-" "-" 5 "user-microservice-router@file" "http://user_microservice:8080" 163ms
 172.21.0.1 - - [18/Nov/2025:23:09:27 +0000] "GET /api/users HTTP/1.1" 500 46 "-" "-" 6 "user-microservice-router@file" "http://user_microservice:8080" 5ms
+172.21.0.1 - - [18/Nov/2025:23:42:24 +0000] "POST /api/auth/register HTTP/1.1" 200 24 "-" "-" 1 "auth-microservice-router@file" "http://auth_microservice:8080" 492ms
+172.21.0.1 - - [18/Nov/2025:23:42:30 +0000] "POST /api/auth/login HTTP/1.1" 200 132 "-" "-" 2 "auth-microservice-router@file" "http://auth_microservice:8080" 461ms
+172.21.0.1 - - [18/Nov/2025:23:42:36 +0000] "POST /api/auth/validate HTTP/1.1" 200 0 "-" "-" 3 "auth-microservice-router@file" "http://auth_microservice:8080" 60ms
+172.21.0.1 - - [18/Nov/2025:23:42:42 +0000] "POST /api/users HTTP/1.1" 500 46 "-" "-" 4 "user-microservice-router@file" "http://user_microservice:8080" 161ms

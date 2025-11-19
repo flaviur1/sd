@@ -36,8 +36,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: No Bearer token provided");
+            filterChain.doFilter(request, response);
             return;
         }
 
