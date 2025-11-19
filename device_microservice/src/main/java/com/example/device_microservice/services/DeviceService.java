@@ -50,7 +50,7 @@ public class DeviceService {
 
     private void checkIfUserExists(UUID id) {
         if (id != null) {
-            URI uri = UriComponentsBuilder.fromUriString("http://user_microservice:8080")
+            URI uri = UriComponentsBuilder.fromUriString("http://user-service:8080")
                     .path("/users/{id}")
                     .buildAndExpand(id)
                     .toUri();

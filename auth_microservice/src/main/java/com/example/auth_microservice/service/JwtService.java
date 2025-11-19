@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Component
 public class JwtService {
 
-    private String SECRET; // pune in docker compose ca env var la toate serviciile
+    private String SECRET;
 
     public JwtService(@Value("${JWT_SECRET}") String SECRET) {
         this.SECRET = SECRET;
