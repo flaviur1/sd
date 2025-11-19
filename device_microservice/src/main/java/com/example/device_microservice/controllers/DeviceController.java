@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,7 +31,19 @@ public class DeviceController {
 
     @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
-        return ResponseEntity.ok(deviceService.getAllDevices());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return ResponseEntity.ok(deviceService.getAllDevices());
+        } else {
+            String username = authentication.getName();
+            UUID currentUserId = authentication.
+
+            return ResponseEntity.ok(deviceService.getAllDevicesForUserId(currentUserId));
+        }
     }
 
     @GetMapping("/{id}")
@@ -56,5 +70,10 @@ public class DeviceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable UUID id) {
         return ResponseEntity.ok(deviceService.deleteById(id));
+    }
+
+    @GetMapping("/getFor/{id}")
+    public ResponseEntity<List<DeviceDetailsDTO>> getAllDevicesForUserId(@PathVariable UUID id){
+        return ResponseEntity.ok(deviceService.getAllDevicesForUserId(id));
     }
 }

@@ -13,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -24,9 +25,10 @@ public class JwtService {
         this.SECRET = SECRET;
     }
 
-    public String generateToken(String username, String roles) {
+    public String generateToken(String username, String roles, UUID userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", roles);
+        claims.put("userId", userId);
         return createToken(claims, username);
     }
 

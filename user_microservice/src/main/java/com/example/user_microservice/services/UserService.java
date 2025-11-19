@@ -10,8 +10,10 @@ import com.example.user_microservice.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +24,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RestTemplateBuilder restTemplateBuilder) {
         this.userRepository = userRepository;
+        this.restTemplate = restTemplateBuilder.build();
     }
 
     public List<UserDTO> findUsers() {
@@ -72,7 +76,14 @@ public class UserService {
             LOGGER.error("User with id {} does not exist", id);
             throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
         }
+        String username = optionalUser.get().getName();
         userRepository.deleteById(id);
+        try {
+            restTemplate.delete("http://auth-service:8080/auth/delete/" + username);
+        } catch (Exception e) {
+            LOGGER.error("User with username {} does not exist in auth DB", username);
+            throw new ResourceNotFoundException(User.class.getSimpleName() + " with username: " + username);
+        }
         return "User with id " + id + " has been succesfully deleted";
     }
 }

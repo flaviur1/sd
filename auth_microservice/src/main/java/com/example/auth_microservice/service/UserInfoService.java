@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,5 +44,14 @@ public class UserInfoService implements UserDetailsService {
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         userInfoRepository.save(userInfo);
         return "User added successfully!";
+    }
+
+    public String deleteUser(String username) {
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findByUsername(username);
+        if (!optionalUserInfo.isPresent()) {
+            return "User with username " + username + " was not found";
+        }
+        userInfoRepository.deleteByUsername(username);
+        return "User with id " + username + " has been succesfully deleted";
     }
 }

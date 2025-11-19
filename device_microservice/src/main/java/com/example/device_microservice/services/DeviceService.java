@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,5 +92,15 @@ public class DeviceService {
     public String deleteById(UUID id) {
         deviceRepository.deleteById(id);
         return "Device with id " + id + " has been deleted succesfully";
+    }
+
+    public List<DeviceDetailsDTO> getAllDevicesForUserId(UUID id) {
+        checkIfUserExists(id);
+        List<Device> devices = deviceRepository.getAllByUserId(id);
+        List<DeviceDetailsDTO> devicesDetails = new ArrayList<>();
+        for (Device device : devices) {
+            devicesDetails.add(DeviceBuilder.toDeviceDetailsDTO(device));
+        }
+        return devicesDetails;
     }
 }
