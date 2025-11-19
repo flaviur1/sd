@@ -36,16 +36,10 @@ public class UserInfoService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
-        UserInfo user = userInfo.get();
-        return new User(user.getUsername(),
-                user.getPassword(),
-                Stream.of(user.getRoles().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList()));
+        return new UserInfoDetails(userInfo.get());
     }
 
     public String addUser(UserInfo userInfo) {
-        // Encrypt password before saving
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         userInfoRepository.save(userInfo);
         return "User added successfully!";

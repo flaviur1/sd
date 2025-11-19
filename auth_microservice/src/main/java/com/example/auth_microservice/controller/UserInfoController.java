@@ -47,7 +47,13 @@ public class UserInfoController {
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
         if (authentication.isAuthenticated()) {
-            return ResponseEntity.ok(jwtService.generateToken(authRequest.getUsername()));
+            UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+
+            String roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(","));
+
+            return ResponseEntity.ok(jwtService.generateToken(authRequest.getUsername(), roles));
         } else {
             throw new UsernameNotFoundException("Invalid user request!");
         }
