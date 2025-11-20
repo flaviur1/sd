@@ -1,0 +1,26 @@
+.client-add {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.input {
+  width: 15rem;
+  height: 3rem;
+  padding: 2rem;
+}
+
+.button {
+  width: 10rem;
+  height: 3rem;
+}
+
+.client-table {
+  width: 70rem;
+}
+
+.client-table th,
+.client-table td {
+  color: white !important;
+}

@@ -1,0 +1,30 @@
+.main-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 98vh;
+}
+
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: grey;
+  border-radius: 2rem;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 10rem;
+}
+
+.button{
+  height: 3rem;
+  width: 5rem;
+  margin-top: 2.5rem;
+  margin-left: 1.5rem;
+}

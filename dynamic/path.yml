@@ -25,6 +25,12 @@ http:
         - strip-api-prefix
       service: auth_microservice
 
+    frontend-router:
+      rule: "Host(`localhost`) && PathPrefix(`/`)"
+      entryPoints:
+        - web
+      service: frontend_microservice
+
   middlewares:
     strip-api-prefix: # Middleware to remove /api prefix
       stripPrefix:
@@ -51,3 +57,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://auth_microservice:8080"
+
+    frontend_microservice:
+      loadBalancer:
+        servers:
+          - url: "http://frontend:80"

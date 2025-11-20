@@ -28,8 +28,19 @@ public class UserController {
         return ResponseEntity.ok(userService.findUsers());
     }
 
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody UserDetailsDTO user) {
+    @PostMapping("/form")
+    public ResponseEntity<Void> createByForm(@Valid @RequestBody UserDetailsDTO user) {
+        UUID id = userService.insert(user);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+        return ResponseEntity.created(location).build(); // 201 + Location header
+    }
+
+    @PostMapping("/byAdmin")
+    public ResponseEntity<Void> createByAdmin(@Valid @RequestBody UserDetailsDTO user) {
         UUID id = userService.insert(user);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

@@ -44,16 +44,12 @@ public class UserInfoController {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
+    @PostMapping("/registerByForm")
+    public ResponseEntity<String> registerByForm(@RequestBody RegisterRequest registerRequest) {
         UUID id = UUID.randomUUID();
-        String roles = registerRequest.getRoles();
-        if (roles == null || roles.isEmpty()) {
-            roles = "ROLE_USER";
-        }
+        String roles = "ROLE_USER";
         UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), roles);
         userInfoService.addUser(userInfo);
-
         try {
             Map<String, Object> userProfile = new HashMap<>();
             userProfile.put("id", id);
@@ -61,7 +57,7 @@ public class UserInfoController {
             userProfile.put("address", registerRequest.getAddress());
             userProfile.put("age", registerRequest.getAge());
 
-            restTemplate.postForEntity("http://user-service:8080/users", userProfile, Void.class);
+            restTemplate.postForEntity("http://user-service:8080/users/form", userProfile, Void.class);
 
         } catch (Exception e) {
             userInfoService.deleteUser(userInfo.getUsername());
@@ -69,6 +65,31 @@ public class UserInfoController {
         }
 
         return ResponseEntity.ok("User registered successfully!");
+    }
+
+    @PostMapping("/registerByAdmin")
+    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest) {
+        UUID id = UUID.randomUUID();
+        String roles = registerRequest.getRoles();
+        if (roles == null || roles.isEmpty()) {
+            roles = "ROLE_USER";
+        }
+        UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), roles);
+        userInfoService.addUser(userInfo);
+        try {
+            Map<String, Object> userProfile = new HashMap<>();
+            userProfile.put("id", id);
+            userProfile.put("name", registerRequest.getUsername());
+            userProfile.put("address", registerRequest.getAddress());
+            userProfile.put("age", registerRequest.getAge());
+
+            restTemplate.postForEntity("http://user-service:8080/users/byAdmin", userProfile, Void.class);
+        } catch (Exception e) {
+            userInfoService.deleteUser(userInfo.getUsername());
+            return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
+        }
+
+        return ResponseEntity.ok("User created successfully!");
     }
 
     @PostMapping("/login")

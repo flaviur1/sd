@@ -83,6 +83,14 @@ services:
     ports:
       - "5434:5432"
 
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    networks:
+      - proxy-network
+    depends_on:
+      - traefik
+
   traefik:
     image: traefik:v3.0
     container_name: traefik
