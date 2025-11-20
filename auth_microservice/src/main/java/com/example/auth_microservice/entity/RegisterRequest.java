@@ -9,6 +9,8 @@ public class RegisterRequest {
     private String address;
     private int age;
 
+    private String roles;
+
     public RegisterRequest() {
     }
 
@@ -17,6 +19,14 @@ public class RegisterRequest {
         this.password = password;
         this.address = address;
         this.age = age;
+    }
+
+    public RegisterRequest(String username, String password, String address, int age, String roles) {
+        this.username = username;
+        this.password = password;
+        this.address = address;
+        this.age = age;
+        this.roles = roles;
     }
 
     public String getUsername() {
@@ -49,6 +59,14 @@ public class RegisterRequest {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     @Override

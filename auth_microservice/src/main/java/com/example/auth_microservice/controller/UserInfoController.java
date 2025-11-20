@@ -47,7 +47,11 @@ public class UserInfoController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
         UUID id = UUID.randomUUID();
-        UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), "ROLE_USER");
+        String roles = registerRequest.getRoles();
+        if (roles == null || roles.isEmpty()) {
+            roles = "ROLE_USER";
+        }
+        UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), roles);
         userInfoService.addUser(userInfo);
 
         try {
