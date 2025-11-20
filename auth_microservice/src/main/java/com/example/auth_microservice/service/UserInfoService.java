@@ -2,6 +2,7 @@ package com.example.auth_microservice.service;
 
 import com.example.auth_microservice.entity.UserInfo;
 import com.example.auth_microservice.repository.UserInfoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,7 +46,7 @@ public class UserInfoService implements UserDetailsService {
         userInfoRepository.save(userInfo);
         return "User added successfully!";
     }
-
+    @Transactional
     public String deleteUser(String username) {
         Optional<UserInfo> optionalUserInfo = userInfoRepository.findByUsername(username);
         if (!optionalUserInfo.isPresent()) {

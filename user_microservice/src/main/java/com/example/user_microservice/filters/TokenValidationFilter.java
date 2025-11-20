@@ -29,6 +29,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -86,6 +87,9 @@ public class TokenValidationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             String roles = claims.get("roles", String.class);
 
+            String userIdString = claims.get("userId", String.class);
+            UUID userId = UUID.fromString(userIdString);
+
             List<SimpleGrantedAuthority> authorities = (roles == null || roles.isEmpty())
                     ? Collections.emptyList()
                     : Arrays.stream(roles.split(","))
@@ -93,7 +97,7 @@ public class TokenValidationFilter extends OncePerRequestFilter {
                     .collect(Collectors.toList());
 
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
