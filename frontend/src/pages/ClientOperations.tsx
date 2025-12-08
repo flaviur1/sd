@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "../axios.ts";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -24,18 +26,27 @@ function ClientOperations() {
     const [ageAdd, setAgeAdd] = useState("");
     const [rolesAdd, setRolesAdd] = useState("");
 
-    useEffect(() => {
-        const getClientList = async () => {
-            try {
-                const response = await axios.get("/users/");
-                setClientList(response.data);
-            } catch (error) {
-                console.error("Getting clients failed:", error);
-            }
-        };
+    const [idPut, setIdPut] = useState("");
+    const [usernamePut, setUsernamePut] = useState("");
+    const [addressPut, setAddressPut] = useState("");
+    const [agePut, setAgePut] = useState("");
 
+    const getClientList = async () => {
+        try {
+            const response = await axios.get("/users");
+            setClientList(response.data);
+        } catch (error) {
+            console.error("Getting clients failed:", error);
+        }
+    };
+
+    useEffect(() => {
         getClientList();
     }, []);
+
+    useEffect(() => {
+        console.log("Updated Client List:", clientList);
+    }, [clientList]);
 
     const handleClientAdd = async () => {
         try {
@@ -46,9 +57,34 @@ function ClientOperations() {
                 age: parseInt(ageAdd, 10),
                 roles: rolesAdd
             });
+
+            getClientList();
+            setUsernameAdd("");
+            setPasswordAdd("");
+            setAddressAdd("");
+            setAgeAdd("");
+            setRolesAdd("");
         }
         catch (error) {
             console.error("Registration failed:", error);
+        }
+    }
+
+    const handleClientUpdate = async () => {
+        try {
+            await axios.put("/users/" + idPut, {
+                name: usernamePut,
+                address: addressPut,
+                age: agePut
+            });
+
+            setIdPut("");
+            setUsernamePut("");
+            setAddressPut("");
+            setAgePut("");
+        }
+        catch (error) {
+            console.error("Update failed:", error);
         }
     }
 
@@ -91,36 +127,37 @@ function ClientOperations() {
             </div>
 
             <div className="client-update">
-
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idPut} sx={whiteInputStyle} onChange={(val) => setIdPut(val.target.value)} />
+                <TextField className="input" label="username" variant="outlined" margin="normal" value={usernamePut} sx={whiteInputStyle} onChange={(val) => setUsernamePut(val.target.value)} />
+                <TextField className="input" label="address" variant="outlined" margin="normal" value={addressPut} sx={whiteInputStyle} onChange={(val) => setAddressPut(val.target.value)} />
+                <TextField className="input" label="age" variant="outlined" margin="normal" value={agePut} sx={whiteInputStyle} onChange={(val) => setAgePut(val.target.value)} />
+                <button className="button" onClick={handleClientUpdate}>Update User</button>
             </div>
 
             <div className="client-table">
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="right">ID</TableCell>
-                            <TableCell align="right">Name</TableCell>
-                            <TableCell align="right">Address</TableCell>
-                            <TableCell align="right">Age</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {clientList.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.id}
-                                </TableCell>
-                                <TableCell align="right">{row.id}</TableCell>
-                                <TableCell align="right">{row.name}</TableCell>
-                                <TableCell align="right">{row.address}</TableCell>
-                                <TableCell align="right">{row.age}</TableCell>
+                <TableContainer component={Paper} sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="left" sx={{ color: 'white' }}>ID</TableCell>
+                                <TableCell align="left" sx={{ color: 'white' }}>Name</TableCell>
+                                <TableCell align="left" sx={{ color: 'white' }}>Age</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {clientList.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell align="left" sx={{ color: 'white' }}>{row.id}</TableCell>
+                                    <TableCell align="left" sx={{ color: 'white' }}>{row.name}</TableCell>
+                                    <TableCell align="left" sx={{ color: 'white' }}>{row.age}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </div>
         </div>
     );

@@ -8,6 +8,8 @@ import com.example.auth_microservice.service.JwtService;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -68,7 +70,7 @@ public class UserInfoController {
     }
 
     @PostMapping("/registerByAdmin")
-    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest, @RequestHeader("Authorization") String token) {
         UUID id = UUID.randomUUID();
         String roles = registerRequest.getRoles();
         if (roles == null || roles.isEmpty()) {
@@ -83,7 +85,12 @@ public class UserInfoController {
             userProfile.put("address", registerRequest.getAddress());
             userProfile.put("age", registerRequest.getAge());
 
-            restTemplate.postForEntity("http://user-service:8080/users/byAdmin", userProfile, Void.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+
+            restTemplate.postForEntity("http://user-service:8080/users/byAdmin", requestEntity, Void.class);
         } catch (Exception e) {
             userInfoService.deleteUser(userInfo.getUsername());
             return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
@@ -133,6 +140,5 @@ public class UserInfoController {
     @DeleteMapping("/delete/{username}")
     public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userInfoService.deleteUser(username));
-
     }
 }

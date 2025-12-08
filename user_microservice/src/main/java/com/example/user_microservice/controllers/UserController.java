@@ -47,7 +47,7 @@ public class UserController {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
-        return ResponseEntity.created(location).build(); // 201 + Location header
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
