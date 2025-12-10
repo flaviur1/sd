@@ -21,8 +21,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/addByForm")
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO) {
+        UUID id = userService.insert(userDTO);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("/addByAdmin")
+    public ResponseEntity<Void> addUserByAdmin(@RequestBody UserDTO userDTO) {
         UUID id = userService.insert(userDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

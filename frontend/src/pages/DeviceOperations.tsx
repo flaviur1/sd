@@ -171,7 +171,6 @@ function DeviceOperations() {
                             <TableRow>
                                 <TableCell align="left" sx={{ color: 'white' }}>ID</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Manufacturer</TableCell>
-                                <TableCell align="left" sx={{ color: 'white' }}>Model</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Max Consumption</TableCell>
                             </TableRow>
                         </TableHead>
@@ -183,7 +182,6 @@ function DeviceOperations() {
                                 >
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.id}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.manufacturer}</TableCell>
-                                    <TableCell align="left" sx={{ color: 'white' }}>{row.model}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.maxConsVal}</TableCell>
                                 </TableRow>
                             ))}

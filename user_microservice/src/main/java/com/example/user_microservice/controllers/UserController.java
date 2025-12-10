@@ -45,7 +45,7 @@ public class UserController {
             userProfile.put("id", user.getId());
             userProfile.put("username", user.getName());
 
-            restTemplate.postForEntity("http://device-service:8080/device-user", userProfile, Void.class);
+            restTemplate.postForEntity("http://device-service:8080/device-user/addByForm", userProfile, Void.class);
         } catch (Exception e) {
             userService.deleteById(user.getId());
             return ResponseEntity.status(500).body("Registration failed: Could not create user profile (user-service).");
@@ -54,14 +54,19 @@ public class UserController {
     }
 
     @PostMapping("/byAdmin")
-    public ResponseEntity<String> createByAdmin(@Valid @RequestBody UserDetailsDTO user) {
+    public ResponseEntity<String> createByAdmin(@Valid @RequestBody UserDetailsDTO user, @RequestHeader("Authorization") String token) {
         userService.insert(user);
         try {
             Map<String, Object> userProfile = new HashMap<>();
             userProfile.put("id", user.getId());
-            userProfile.put("name", user.getName());
+            userProfile.put("username", user.getName());
 
-            restTemplate.postForEntity("http://device-service:8080/device-user", userProfile, Void.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+
+            restTemplate.postForEntity("http://device-service:8080/device-user/addByAdmin", requestEntity, Void.class);
         } catch (Exception e) {
             userService.deleteById(user.getId());
             return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
