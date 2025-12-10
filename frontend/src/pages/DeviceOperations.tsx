@@ -16,6 +16,7 @@ interface Device {
     manufacturer: string;
     model: string;
     maxConsVal: number;
+    userId: string
 }
 
 function DeviceOperations() {
@@ -24,6 +25,16 @@ function DeviceOperations() {
     const [manufacturerAdd, setManufacturerAdd] = useState("");
     const [modelAdd, setModelAdd] = useState("");
     const [maxConsValAdd, setMaxConsValAdd] = useState("");
+
+    const [idDelete, setIdDelete] = useState("");
+
+    const [idUpdate, setIdUpdate] = useState("");
+    const [manufacturerUpdate, setManufacturerUpdate] = useState("");
+    const [modelUpdate, setModelUpdate] = useState("");
+    const [maxConsValUpdate, setMaxConsValUpdate] = useState("");
+
+    const [idGet, setIdGet] = useState("");
+    const [receivedDevice, setReceivedDevice] = useState<Device>();
 
 
     const getDeviceList = async () => {
@@ -41,7 +52,7 @@ function DeviceOperations() {
 
     const handleDeviceAdd = async () => {
         try {
-            await axios.post("/devices/", {
+            await axios.post("/devices", {
                 manufacturer: manufacturerAdd,
                 model: modelAdd,
                 maxConsVal: parseInt(maxConsValAdd, 10)
@@ -53,7 +64,55 @@ function DeviceOperations() {
             setMaxConsValAdd("");
         }
         catch (error) {
-            console.log("Device add failed: ", error);
+            console.error("Device add failed: ", error);
+        }
+    }
+
+    const handleDeviceDelete = async () => {
+        try {
+            await axios.delete("/devices/" + idDelete);
+            getDeviceList();
+            setIdDelete("");
+        }
+        catch (error) {
+            console.error("Delete device failed:", error);
+        }
+    }
+
+    const handleDeviceUpdate = async () => {
+        try {
+            await axios.put("/devices/" + idUpdate, {
+                manufacturer: manufacturerUpdate,
+                model: modelUpdate,
+                maxConsVal: maxConsValUpdate
+            });
+
+            getDeviceList();
+            setIdUpdate("");
+            setManufacturerUpdate("");
+            setModelUpdate("");
+            setMaxConsValUpdate("");
+        }
+        catch (error) {
+            console.error("Update device failed: ", error);
+        }
+    }
+
+    const handleGetDeviceById = async () => {
+        try {
+            const response = await axios.get("/devices/" + idGet);
+            console.log(response.data);
+            setReceivedDevice(response.data);
+            alert(
+                "ID: " + response.data.id + "\n" +
+                "Manufacturer: " + response.data.manufacturer + "\n" +
+                "Model: " + response.data.model + "\n" +
+                "Max Consumption: " + response.data.maxConsVal
+            );
+            setIdGet("");
+        }
+        catch (error) {
+            console.error("Get Device by Id failed: ", error);
         }
     }
 
@@ -89,16 +148,29 @@ function DeviceOperations() {
                 <TextField className="input" label="max consumption" variant="outlined" margin="normal" value={maxConsValAdd} sx={whiteInputStyle} onChange={(val) => setMaxConsValAdd(val.target.value)} />
                 <button className="button" onClick={handleDeviceAdd}>Add Device</button>
             </div>
-            <div className="device-delete"></div>
-            <div className="device-update"></div>
-            <div className="device-add"></div>
+            <div className="device-delete">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idDelete} sx={whiteInputStyle} onChange={(val) => setIdDelete(val.target.value)} />
+                <button className="button" onClick={handleDeviceDelete}>Delete Device</button>
+            </div>
+            <div className="device-update">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idUpdate} sx={whiteInputStyle} onChange={(val) => setIdUpdate(val.target.value)} />
+                <TextField className="input" label="manufacturer" variant="outlined" margin="normal" value={manufacturerUpdate} sx={whiteInputStyle} onChange={(val) => setManufacturerUpdate(val.target.value)} />
+                <TextField className="input" label="model" variant="outlined" margin="normal" value={modelUpdate} sx={whiteInputStyle} onChange={(val) => setModelUpdate(val.target.value)} />
+                <TextField className="input" label="max consumption" variant="outlined" margin="normal" value={maxConsValUpdate} sx={whiteInputStyle} onChange={(val) => setMaxConsValUpdate(val.target.value)} />
+                <button className="button" onClick={handleDeviceUpdate}>Update Device</button>
+            </div>
+
+            <div className="device-get">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idGet} sx={whiteInputStyle} onChange={(val) => setIdGet(val.target.value)} />
+                <button className="button" onClick={handleGetDeviceById}>Get Device</button>
+            </div>
             <div className="device-add"></div>
 
             <div className="device-table">
                 <TableContainer component={Paper} sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
-                            <TableRow>  
+                            <TableRow>
                                 <TableCell align="left" sx={{ color: 'white' }}>ID</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Manufacturer</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Model</TableCell>

@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField"
 
 interface Client {
     id: string;
+    address: string;
     name: string;
     age: number;
 }
@@ -34,6 +35,9 @@ function ClientOperations() {
     const [agePut, setAgePut] = useState("");
 
     const [idAdmin, setIdAdmin] = useState("");
+
+    const [idGet, setIdGet] = useState("");
+    const [receivedClient, setReceivedClient] = useState<Client>();
 
     const getClientList = async () => {
         try {
@@ -92,7 +96,7 @@ function ClientOperations() {
                 address: addressPut,
                 age: agePut
             });
-
+            getClientList();
             setIdPut("");
             setUsernamePut("");
             setAddressPut("");
@@ -106,9 +110,29 @@ function ClientOperations() {
     const handleClientMakeAdmin = async () => {
         try {
             await axios.put("/auth/admin/makeAdmin/" + idAdmin);
+            setIdAdmin("");
+            alert("Client was made an admin.")
         }
         catch (error) {
             console.error("Make admin failed:", error);
+        }
+    }
+
+    const handleClientGetById = async () => {
+        try {
+            const response = await axios.get("/users/" + idGet);
+            console.log(response.data);
+            setReceivedClient(response.data);
+            alert(
+                "ID: " + response.data.id + "\n" +
+                "Name: " + response.data.name + "\n" +
+                "Address: " + response.data.address + "\n" +
+                "Age: " + response.data.age
+            );
+            setIdGet("");
+        }
+        catch (error) {
+            console.error("User get by id failed: ", error);
         }
     }
 
@@ -162,6 +186,11 @@ function ClientOperations() {
             <div className="client-makeAdmin">
                 <TextField className="input" label="id" variant="outlined" margin="normal" value={idAdmin} sx={whiteInputStyle} onChange={(val) => setIdAdmin(val.target.value)} />
                 <button className="button" onClick={handleClientMakeAdmin}>Make User Admin</button>
+            </div>
+
+            <div className="client-get">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idGet} sx={whiteInputStyle} onChange={(val) => setIdGet(val.target.value)} />
+                <button className="button" onClick={handleClientGetById}>Get User</button>
             </div>
 
 

@@ -80,7 +80,7 @@ public class DeviceService {
         }
         checkIfUserExists(device.getUserId());
         Device d = deviceOptional.get();
-        d.setId(device.getId());
+        d.setId(id);
         d.setManufacturer(device.getManufacturer());
         d.setModel(device.getModel());
         d.setMaxConsVal(device.getMaxConsVal());

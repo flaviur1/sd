@@ -59,21 +59,21 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        URI uri = UriComponentsBuilder.fromUriString("http://auth-service:8080")
-                .path("/auth/validate")
-                .build()
-                .toUri();
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", authHeader);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            restTemplate.postForEntity(uri, entity, Void.class);
-
-        } catch (HttpClientErrorException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Invalid Token");
-        }
+//        URI uri = UriComponentsBuilder.fromUriString("http://auth-service:8080")
+//                .path("/auth/validate")
+//                .build()
+//                .toUri();
+//        try {
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("Authorization", authHeader);
+//            HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//            restTemplate.postForEntity(uri, entity, Void.class);
+//
+//        } catch (HttpClientErrorException e) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("Unauthorized: Invalid Token");
+//        }
 
         try {
             byte[] keyBytes = Decoders.BASE64.decode(SECRET);

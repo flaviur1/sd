@@ -28,6 +28,7 @@ function LoginPage() {
             const userId = decoded.userId;
             const roles = decoded.roles;
             const tokenUsername = decoded.sub;
+            // TODO - stop saving the decoded values in localStorage
             localStorage.setItem("userId", userId);
             localStorage.setItem("roles", roles);
             localStorage.setItem("username", tokenUsername);
