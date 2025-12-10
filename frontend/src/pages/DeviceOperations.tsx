@@ -34,7 +34,6 @@ function DeviceOperations() {
     const [maxConsValUpdate, setMaxConsValUpdate] = useState("");
 
     const [idGet, setIdGet] = useState("");
-    const [receivedDevice, setReceivedDevice] = useState<Device>();
 
 
     const getDeviceList = async () => {
@@ -102,7 +101,6 @@ function DeviceOperations() {
         try {
             const response = await axios.get("/devices/" + idGet);
             console.log(response.data);
-            setReceivedDevice(response.data);
             alert(
                 "ID: " + response.data.id + "\n" +
                 "Manufacturer: " + response.data.manufacturer + "\n" +

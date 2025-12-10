@@ -37,7 +37,6 @@ function ClientOperations() {
     const [idAdmin, setIdAdmin] = useState("");
 
     const [idGet, setIdGet] = useState("");
-    const [receivedClient, setReceivedClient] = useState<Client>();
 
     const getClientList = async () => {
         try {
@@ -122,7 +121,6 @@ function ClientOperations() {
         try {
             const response = await axios.get("/users/" + idGet);
             console.log(response.data);
-            setReceivedClient(response.data);
             alert(
                 "ID: " + response.data.id + "\n" +
                 "Name: " + response.data.name + "\n" +

@@ -9,12 +9,8 @@ import com.example.device_microservice.repositories.DeviceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +21,12 @@ import java.util.stream.Collectors;
 public class DeviceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceService.class);
     private final DeviceRepository deviceRepository;
-    private final RestTemplate restTemplate;
+    private final UserService userService;
 
     @Autowired
-    public DeviceService(DeviceRepository deviceRepository, RestTemplateBuilder restTemplateBuilder) {
+    public DeviceService(DeviceRepository deviceRepository, UserService userService) {
         this.deviceRepository = deviceRepository;
-        this.restTemplate = restTemplateBuilder.build();
+        this.userService = userService;
     }
 
     public List<DeviceDTO> getAllDevices() {
@@ -50,17 +46,8 @@ public class DeviceService {
     }
 
     private void checkIfUserExists(UUID id) {
-        if (id != null) {
-            URI uri = UriComponentsBuilder.fromUriString("http://user-service:8080")
-                    .path("/users/{id}")
-                    .buildAndExpand(id)
-                    .toUri();
-
-            try {
-                this.restTemplate.getForEntity(uri, Void.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Could not connect to User Microservice for validation.", e);
-            }
+        if (id != null && !userService.existsById(id)) {
+            throw new RuntimeException("User with id " + id + " does not exist (sync required).");
         }
     }
 

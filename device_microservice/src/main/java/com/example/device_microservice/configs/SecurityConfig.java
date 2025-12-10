@@ -26,11 +26,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/devices/getFor/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/devices/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/devices/getFor/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/devices/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/device-user/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/device-user/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/device-user/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/device-user/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

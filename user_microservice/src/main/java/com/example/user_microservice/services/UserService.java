@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate;
+
 
     @Autowired
-    public UserService(UserRepository userRepository, RestTemplateBuilder restTemplateBuilder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.restTemplate = restTemplateBuilder.build();
+
     }
 
     public List<UserDTO> findUsers() {

@@ -145,7 +145,7 @@ public class UserInfoController {
                     Void.class
             );
             userInfoService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully from both databases.");
+            return ResponseEntity.ok("User deleted successfully from all databases.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
         }
