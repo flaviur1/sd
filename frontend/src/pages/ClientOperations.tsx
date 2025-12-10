@@ -26,10 +26,14 @@ function ClientOperations() {
     const [ageAdd, setAgeAdd] = useState("");
     const [rolesAdd, setRolesAdd] = useState("");
 
+    const [idDelete, setIdDelete] = useState("");
+
     const [idPut, setIdPut] = useState("");
     const [usernamePut, setUsernamePut] = useState("");
     const [addressPut, setAddressPut] = useState("");
     const [agePut, setAgePut] = useState("");
+
+    const [idAdmin, setIdAdmin] = useState("");
 
     const getClientList = async () => {
         try {
@@ -70,6 +74,17 @@ function ClientOperations() {
         }
     }
 
+    const handleClientDelete = async () => {
+        try {
+            await axios.delete("/auth/delete/" + idDelete);
+            getClientList();
+            setIdDelete("");
+        }
+        catch (error) {
+            console.error("Delete failed:", error);
+        }
+    }
+
     const handleClientUpdate = async () => {
         try {
             await axios.put("/users/" + idPut, {
@@ -85,6 +100,15 @@ function ClientOperations() {
         }
         catch (error) {
             console.error("Update failed:", error);
+        }
+    }
+
+    const handleClientMakeAdmin = async () => {
+        try {
+            await axios.post("/users/makeAdmin/" + idAdmin);
+        }
+        catch (error) {
+            console.error("Make admin failed:", error);
         }
     }
 
@@ -123,7 +147,8 @@ function ClientOperations() {
             </div>
 
             <div className="client-delete">
-
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idDelete} sx={whiteInputStyle} onChange={(val) => setIdDelete(val.target.value)} />
+                <button className="button" onClick={handleClientDelete}>Delete User</button>
             </div>
 
             <div className="client-update">
@@ -159,6 +184,12 @@ function ClientOperations() {
                     </Table>
                 </TableContainer>
             </div>
+
+            <div className="client-makeAdmin">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idAdmin} sx={whiteInputStyle} onChange={(val) => setIdAdmin(val.target.value)} />
+                <button className="button" onClick={handleClientMakeAdmin}>Make User Admin</button>
+            </div>
+
         </div>
     );
 }

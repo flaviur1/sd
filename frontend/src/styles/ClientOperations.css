@@ -12,6 +12,13 @@
   padding: 1.5rem;
 }
 
+.client-delete {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+}
+
 .input {
   width: 15rem;
   height: 3rem;

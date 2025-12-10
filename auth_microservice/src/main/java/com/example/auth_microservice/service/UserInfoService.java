@@ -46,13 +46,14 @@ public class UserInfoService implements UserDetailsService {
         userInfoRepository.save(userInfo);
         return "User added successfully!";
     }
+
     @Transactional
-    public String deleteUser(String username) {
-        Optional<UserInfo> optionalUserInfo = userInfoRepository.findByUsername(username);
+    public String deleteUser(UUID id) {
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
         if (!optionalUserInfo.isPresent()) {
-            return "User with username " + username + " was not found";
+            return "User with username " + id + " was not found";
         }
-        userInfoRepository.deleteByUsername(username);
-        return "User with id " + username + " has been succesfully deleted";
+        userInfoRepository.deleteById(id);
+        return "User with id " + id + " has been succesfully deleted";
     }
 }

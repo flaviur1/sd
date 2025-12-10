@@ -78,12 +78,16 @@ public class UserService {
         }
         String username = optionalUser.get().getName();
         userRepository.deleteById(id);
-        try {
-            restTemplate.delete("http://auth-service:8080/auth/delete/" + username);
-        } catch (Exception e) {
-            LOGGER.error("User with username {} does not exist in auth DB", username);
-            throw new ResourceNotFoundException(User.class.getSimpleName() + " with username: " + username);
-        }
         return "User with id " + id + " has been succesfully deleted";
+    }
+
+    public String makeUserAdmin(UUID id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            LOGGER.error("User with id {} does not exist", id);
+            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
+        }
+        User user = optionalUser.get();
+        user.setId(id);
     }
 }

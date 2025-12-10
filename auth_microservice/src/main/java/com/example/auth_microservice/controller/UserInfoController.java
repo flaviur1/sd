@@ -8,25 +8,19 @@ import com.example.auth_microservice.service.JwtService;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,7 +56,7 @@ public class UserInfoController {
             restTemplate.postForEntity("http://user-service:8080/users/form", userProfile, Void.class);
 
         } catch (Exception e) {
-            userInfoService.deleteUser(userInfo.getUsername());
+            userInfoService.deleteUser(userInfo.getId());
             return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
         }
 
@@ -92,7 +86,7 @@ public class UserInfoController {
 
             restTemplate.postForEntity("http://user-service:8080/users/byAdmin", requestEntity, Void.class);
         } catch (Exception e) {
-            userInfoService.deleteUser(userInfo.getUsername());
+            userInfoService.deleteUser(userInfo.getId());
             return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
         }
 
@@ -137,8 +131,23 @@ public class UserInfoController {
         }
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<String> deleteByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(userInfoService.deleteUser(username));
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id, @RequestHeader("Authorization") String token) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+            restTemplate.exchange(
+                    "http://user-service:8080/users/" + id,
+                    HttpMethod.DELETE,
+                    requestEntity,
+                    Void.class
+            );
+            userInfoService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully from both databases.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
+        }
     }
 }

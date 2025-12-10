@@ -65,5 +65,8 @@ public class UserController {
         return userService.deleteById(id);
     }
 
-
+    @PutMapping("/makeAdmin/{id}")
+    public ResponseEntity<String> makeUserAdmin(@PathVariable UUID id) {
+        return ResponseEntity.ok(userService.makeUserAdmin(id));
+    }
 }
