@@ -76,18 +76,7 @@ public class UserService {
             LOGGER.error("User with id {} does not exist", id);
             throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
         }
-        String username = optionalUser.get().getName();
         userRepository.deleteById(id);
         return "User with id " + id + " has been succesfully deleted";
-    }
-
-    public String makeUserAdmin(UUID id){
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (!optionalUser.isPresent()) {
-            LOGGER.error("User with id {} does not exist", id);
-            throw new ResourceNotFoundException(User.class.getSimpleName() + " with id: " + id);
-        }
-        User user = optionalUser.get();
-        user.setId(id);
     }
 }

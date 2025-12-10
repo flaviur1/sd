@@ -14,12 +14,12 @@ import TextField from "@mui/material/TextField"
 interface Client {
     id: string;
     name: string;
-    address: string;
     age: number;
 }
 
 function ClientOperations() {
     const [clientList, setClientList] = useState<Client[]>([]);
+
     const [usernameAdd, setUsernameAdd] = useState("");
     const [passwordAdd, setPasswordAdd] = useState("");
     const [addressAdd, setAddressAdd] = useState("");
@@ -105,7 +105,7 @@ function ClientOperations() {
 
     const handleClientMakeAdmin = async () => {
         try {
-            await axios.post("/users/makeAdmin/" + idAdmin);
+            await axios.put("/auth/admin/makeAdmin/" + idAdmin);
         }
         catch (error) {
             console.error("Make admin failed:", error);
@@ -159,6 +159,12 @@ function ClientOperations() {
                 <button className="button" onClick={handleClientUpdate}>Update User</button>
             </div>
 
+            <div className="client-makeAdmin">
+                <TextField className="input" label="id" variant="outlined" margin="normal" value={idAdmin} sx={whiteInputStyle} onChange={(val) => setIdAdmin(val.target.value)} />
+                <button className="button" onClick={handleClientMakeAdmin}>Make User Admin</button>
+            </div>
+
+
             <div className="client-table">
                 <TableContainer component={Paper} sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -184,12 +190,6 @@ function ClientOperations() {
                     </Table>
                 </TableContainer>
             </div>
-
-            <div className="client-makeAdmin">
-                <TextField className="input" label="id" variant="outlined" margin="normal" value={idAdmin} sx={whiteInputStyle} onChange={(val) => setIdAdmin(val.target.value)} />
-                <button className="button" onClick={handleClientMakeAdmin}>Make User Admin</button>
-            </div>
-
         </div>
     );
 }

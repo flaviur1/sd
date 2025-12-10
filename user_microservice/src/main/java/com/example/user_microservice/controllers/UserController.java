@@ -64,9 +64,4 @@ public class UserController {
     public String deleteUserById(@PathVariable UUID id) {
         return userService.deleteById(id);
     }
-
-    @PutMapping("/makeAdmin/{id}")
-    public ResponseEntity<String> makeUserAdmin(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.makeUserAdmin(id));
-    }
 }

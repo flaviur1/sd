@@ -51,9 +51,26 @@ public class UserInfoService implements UserDetailsService {
     public String deleteUser(UUID id) {
         Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
         if (!optionalUserInfo.isPresent()) {
-            return "User with username " + id + " was not found";
+            return "User with id " + id + " was not found";
         }
         userInfoRepository.deleteById(id);
         return "User with id " + id + " has been succesfully deleted";
+    }
+
+    public String makeUserAdmin(UUID id) {
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
+        if (!optionalUserInfo.isPresent()) {
+            throw new RuntimeException("User with id " + id + " was not found");
+        }
+        UserInfo userInfo = optionalUserInfo.get();
+        String roles = userInfo.getRoles();
+        if (roles.contains("ROLE_ADMIN")) {
+            return "User with id " + id + " is already an admin.";
+        } else {
+            roles = roles + ",ROLE_ADMIN";
+            userInfo.setRoles(roles);
+            userInfoRepository.save(userInfo);
+            return "User with id " + id + " was made an admin.";
+        }
     }
 }

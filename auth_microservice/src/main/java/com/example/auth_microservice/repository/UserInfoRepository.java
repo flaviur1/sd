@@ -10,6 +10,5 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
     Optional<UserInfo> findByUsername(String username);
 
     Optional<UserInfo> findById(UUID id);
-
     void deleteById(UUID id);
 }

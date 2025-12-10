@@ -150,4 +150,14 @@ public class UserInfoController {
             return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
         }
     }
+
+    @PutMapping("/admin/makeAdmin/{id}")
+    public ResponseEntity<String> makeUserAdmin(@PathVariable UUID id) {
+        try {
+            String message = userInfoService.makeUserAdmin(id);
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }
