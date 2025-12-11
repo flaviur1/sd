@@ -79,9 +79,4 @@ docker-compose down
 
 ## Accesare aplicație
 
-- **Frontend**: Configurabil prin Traefik (vezi dynamic config)
-- **Traefik Dashboard**: http://localhost:8080
-- **Baze de date** (debugging):
-  - User DB: `localhost:5432`
-  - Device DB: `localhost:5433`
-  - Auth DB: `localhost:5434`
+- **Traefik Dashboard**: http://localhost:8080`
