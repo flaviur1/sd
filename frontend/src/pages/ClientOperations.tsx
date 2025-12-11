@@ -56,7 +56,7 @@ function ClientOperations() {
     }, [clientList]);
 
     const handleClientAdd = async () => {
-        if (!usernameAdd || !passwordAdd || !addressAdd || !ageAdd || !rolesAdd) {
+        if (!usernameAdd || !passwordAdd || !addressAdd || !ageAdd) {
             return;
         }
 

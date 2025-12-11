@@ -72,7 +72,7 @@ function DeviceOperations() {
     }, []);
 
     const handleDeviceAdd = async () => {
-        if (!manufacturerAdd || !modelAdd || maxConsValAdd) {
+        if (!manufacturerAdd || !modelAdd || !maxConsValAdd) {
             return;
         }
 
@@ -109,7 +109,7 @@ function DeviceOperations() {
     }
 
     const handleDeviceUpdate = async () => {
-        if (!manufacturerUpdate || !modelUpdate || maxConsValUpdate) {
+        if (!manufacturerUpdate || !modelUpdate || !maxConsValUpdate) {
             return;
         }
 
