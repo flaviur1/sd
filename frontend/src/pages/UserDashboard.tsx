@@ -55,7 +55,7 @@ function UserDashboard() {
 
     const handleLogout = () => {
         navigate("/");
-        localStorage.setItem("token", "");
+        localStorage.removeItem("token");
     }
 
     return (

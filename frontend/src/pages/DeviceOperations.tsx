@@ -72,6 +72,10 @@ function DeviceOperations() {
     }, []);
 
     const handleDeviceAdd = async () => {
+        if (!manufacturerAdd || !modelAdd || maxConsValAdd) {
+            return;
+        }
+
         try {
             await axios.post("/devices", {
                 manufacturer: manufacturerAdd,
@@ -90,6 +94,10 @@ function DeviceOperations() {
     }
 
     const handleDeviceDelete = async () => {
+        if (!idDelete) {
+            return;
+        }
+
         try {
             await axios.delete("/devices/" + idDelete);
             getDeviceList();
@@ -101,6 +109,10 @@ function DeviceOperations() {
     }
 
     const handleDeviceUpdate = async () => {
+        if (!manufacturerUpdate || !modelUpdate || maxConsValUpdate) {
+            return;
+        }
+
         try {
             const response = await axios.get("/devices/" + idUpdate);
             const currentDevice = response.data;
@@ -123,6 +135,10 @@ function DeviceOperations() {
     }
 
     const handleGetDeviceById = async () => {
+        if (!idGet) {
+            return;
+        }
+
         try {
             const response = await axios.get("/devices/" + idGet);
             console.log(response.data);
@@ -141,6 +157,10 @@ function DeviceOperations() {
     }
 
     const handleAssignUserToDevice = async () => {
+        if (!idAssign || !userIdAssign) {
+            return;
+        }
+
         try {
             const response = await axios.get("/devices/" + idAssign);
             const currentDevice = response.data;

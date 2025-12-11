@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/devices/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/devices/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/device-user/addByForm").permitAll()
                         .requestMatchers(HttpMethod.GET, "/device-user", "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/device-user/**").authenticated()

@@ -7,6 +7,7 @@ import com.example.auth_microservice.entity.UserInfo;
 import com.example.auth_microservice.service.JwtService;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/auth")
+@Tag(name = "Auth", description = "Auth management APIs")
 public class UserInfoController {
 
     private final UserInfoService userInfoService;

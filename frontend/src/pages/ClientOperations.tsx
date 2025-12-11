@@ -56,6 +56,10 @@ function ClientOperations() {
     }, [clientList]);
 
     const handleClientAdd = async () => {
+        if (!usernameAdd || !passwordAdd || !addressAdd || !ageAdd || !rolesAdd) {
+            return;
+        }
+
         try {
             await axios.post("/auth/registerByAdmin", {
                 username: usernameAdd,
@@ -78,6 +82,10 @@ function ClientOperations() {
     }
 
     const handleClientDelete = async () => {
+        if (!idDelete) {
+            return;
+        }
+
         try {
             await axios.delete("/auth/delete/" + idDelete);
             getClientList();
@@ -89,6 +97,10 @@ function ClientOperations() {
     }
 
     const handleClientUpdate = async () => {
+        if (!idPut || !usernamePut || !addressPut || !agePut) {
+            return;
+        }
+
         try {
             await axios.put("/users/" + idPut, {
                 name: usernamePut,
@@ -107,6 +119,10 @@ function ClientOperations() {
     }
 
     const handleClientMakeAdmin = async () => {
+        if (!idAdmin) {
+            return;
+        }
+
         try {
             await axios.put("/auth/admin/makeAdmin/" + idAdmin);
             setIdAdmin("");
@@ -118,6 +134,11 @@ function ClientOperations() {
     }
 
     const handleClientGetById = async () => {
+        if (!idGet) {
+            return;
+        }
+
+
         try {
             const response = await axios.get("/users/" + idGet);
             console.log(response.data);
