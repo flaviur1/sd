@@ -26,13 +26,13 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/devices/getFor/**").permitAll()
+                        .requestMatchers("/devices/getFor/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, "/devices/**").authenticated()
                         .requestMatchers("/device-user/addByForm").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/device-user/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/device-user", "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/device-user/**").authenticated()

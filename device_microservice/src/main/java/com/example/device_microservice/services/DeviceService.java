@@ -81,13 +81,13 @@ public class DeviceService {
         return "Device with id " + id + " has been deleted succesfully";
     }
 
-    public List<DeviceDTO> getAllDevicesForUserId(UUID id) {
+    public List<DeviceDetailsDTO> getAllDevicesForUserId(UUID id) {
         checkIfUserExists(id);
         List<Device> devices = deviceRepository.getAllByUserId(id);
-        List<DeviceDTO> devicesDTO = new ArrayList<>();
+        List<DeviceDetailsDTO> deviceDetailsDTOS = new ArrayList<>();
         for (Device device : devices) {
-            devicesDTO.add(DeviceBuilder.toDeviceDTO(device));
+            deviceDetailsDTOS.add(DeviceBuilder.toDeviceDetailsDTO(device));
         }
-        return devicesDTO;
+        return deviceDetailsDTOS;
     }
 }

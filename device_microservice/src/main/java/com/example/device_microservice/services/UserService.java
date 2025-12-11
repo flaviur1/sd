@@ -1,7 +1,9 @@
 package com.example.device_microservice.services;
 
 import com.example.device_microservice.dtos.UserDTO;
+import com.example.device_microservice.dtos.builder.DeviceBuilder;
 import com.example.device_microservice.dtos.builder.UserBuilder;
+import com.example.device_microservice.entities.Device;
 import com.example.device_microservice.entities.User;
 import com.example.device_microservice.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -9,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -20,6 +24,13 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public List<UserDTO> getAllUsers() {
+        List<User> userList = userRepository.findAll();
+        return userList.stream()
+                .map(UserBuilder::toUserDTO)
+                .collect(Collectors.toList());
     }
 
     public UUID insert(UserDTO userDTO) {

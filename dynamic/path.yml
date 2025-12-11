@@ -10,7 +10,7 @@ http:
       service: user_microservice
 
     device-microservice-router:
-      rule: "Host(`localhost`) && PathPrefix(`/api/devices`)"
+      rule: "Host(`localhost`) && PathPrefix(`/api/devices`) || PathPrefix(`/api/device-user`)"
       entryPoints:
         - web
       middlewares:

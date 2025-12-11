@@ -2,15 +2,13 @@ package com.example.device_microservice.controllers;
 
 import com.example.device_microservice.dtos.DeviceDTO;
 import com.example.device_microservice.dtos.DeviceDetailsDTO;
-import com.example.device_microservice.entities.Device;
 import com.example.device_microservice.services.DeviceService;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/devices")
 public class DeviceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceController.class);
@@ -31,17 +29,7 @@ public class DeviceController {
 
     @GetMapping
     public ResponseEntity<List<DeviceDTO>> getAllDevices() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (isAdmin) {
-            return ResponseEntity.ok(deviceService.getAllDevices());
-        } else {
-            UUID currentUserId = (UUID) authentication.getPrincipal();
-            return ResponseEntity.ok(deviceService.getAllDevicesForUserId(currentUserId));
-        }
+        return ResponseEntity.ok(deviceService.getAllDevices());
     }
 
     @GetMapping("/{id}")
@@ -71,7 +59,12 @@ public class DeviceController {
     }
 
     @GetMapping("/getFor/{id}")
-    public ResponseEntity<List<DeviceDTO>> getAllDevicesForUserId(@PathVariable UUID id) {
+    public ResponseEntity<List<DeviceDetailsDTO>> getAllDevicesForUserId(@PathVariable UUID id) {
         return ResponseEntity.ok(deviceService.getAllDevicesForUserId(id));
+    }
+
+    @PutMapping("/assign/{id}")
+    public ResponseEntity<DeviceDetailsDTO> assignDeviceToUser(@PathVariable UUID id, @RequestBody DeviceDetailsDTO device) {
+        return ResponseEntity.ok(deviceService.updateDeviceById(id, device));
     }
 }
