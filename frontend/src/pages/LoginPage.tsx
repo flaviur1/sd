@@ -25,13 +25,7 @@ function LoginPage() {
             const token = response.data;
             localStorage.setItem("token", token);
             const decoded = jwtDecode<CustomJwtPayload>(token);
-            const userId = decoded.userId;
             const roles = decoded.roles;
-            const tokenUsername = decoded.sub;
-            // TODO - stop saving the decoded values in localStorage
-            localStorage.setItem("userId", userId);
-            localStorage.setItem("roles", roles);
-            localStorage.setItem("username", tokenUsername);
             console.log("Login successful");
 
             if (roles.includes("ROLE_ADMIN")) {

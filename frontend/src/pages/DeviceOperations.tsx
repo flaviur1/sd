@@ -10,6 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from "@mui/material/TextField"
+import MenuItem from '@mui/material/MenuItem';
 
 interface Device {
     id: string,
@@ -17,6 +18,11 @@ interface Device {
     model: string;
     maxConsVal: number;
     userId: string
+}
+
+interface User {
+    id: string,
+    username: string
 }
 
 function DeviceOperations() {
@@ -35,6 +41,10 @@ function DeviceOperations() {
 
     const [idGet, setIdGet] = useState("");
 
+    const [userList, setUserList] = useState<User[]>([]);
+    const [idAssign, setIdAssign] = useState("");
+    const [userIdAssign, setUserIdAssign] = useState("");
+
 
     const getDeviceList = async () => {
         try {
@@ -45,8 +55,20 @@ function DeviceOperations() {
         }
     };
 
+    const getUserList = async () => {
+        try {
+            const response = await axios.get("/device-user")
+            setUserList(response.data);
+        }
+        catch (error) {
+            console.error("Getting all users failed:", error);
+        }
+    }
+
+
     useEffect(() => {
         getDeviceList();
+        getUserList();
     }, []);
 
     const handleDeviceAdd = async () => {
@@ -80,10 +102,13 @@ function DeviceOperations() {
 
     const handleDeviceUpdate = async () => {
         try {
+            const response = await axios.get("/devices/" + idUpdate);
+            const currentDevice = response.data;
             await axios.put("/devices/" + idUpdate, {
                 manufacturer: manufacturerUpdate,
                 model: modelUpdate,
-                maxConsVal: maxConsValUpdate
+                maxConsVal: maxConsValUpdate,
+                userId: currentDevice.userId
             });
 
             getDeviceList();
@@ -105,12 +130,37 @@ function DeviceOperations() {
                 "ID: " + response.data.id + "\n" +
                 "Manufacturer: " + response.data.manufacturer + "\n" +
                 "Model: " + response.data.model + "\n" +
-                "Max Consumption: " + response.data.maxConsVal
+                "Max Consumption: " + response.data.maxConsVal + "\n" +
+                "User Id: " + response.data.userId
             );
             setIdGet("");
         }
         catch (error) {
             console.error("Get Device by Id failed: ", error);
+        }
+    }
+
+    const handleAssignUserToDevice = async () => {
+        try {
+            const response = await axios.get("/devices/" + idAssign);
+            const currentDevice = response.data;
+
+            await axios.put("/devices/assign/" + idAssign, {
+                id: currentDevice.id,
+                manufacturer: currentDevice.manufacturer,
+                model: currentDevice.model,
+                maxConsVal: currentDevice.maxConsVal,
+                userId: userIdAssign
+            });
+
+            getDeviceList();
+            setIdAssign("");
+            setUserIdAssign("");
+            alert("User assigned successfully!");
+        }
+        catch (error) {
+            console.error("Assignation failed:", error);
+            alert("Failed to assign user. Check console.");
         }
     }
 
@@ -162,7 +212,21 @@ function DeviceOperations() {
                 <TextField className="input" label="id" variant="outlined" margin="normal" value={idGet} sx={whiteInputStyle} onChange={(val) => setIdGet(val.target.value)} />
                 <button className="button" onClick={handleGetDeviceById}>Get Device</button>
             </div>
-            <div className="device-add"></div>
+
+            <div className="device-assign">
+                <TextField className="input" label="device id" variant="outlined" margin="normal" value={idAssign} sx={whiteInputStyle} onChange={(val) => setIdAssign(val.target.value)} />
+                <TextField select className="input" label="Assign User" variant="outlined" margin="normal" value={userIdAssign} sx={{ ...whiteInputStyle, width: '200px' }} onChange={(val) => setUserIdAssign(val.target.value)}>
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {userList.map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                            {user.username} (ID: {user.id})
+                        </MenuItem>
+                    ))}
+                </TextField>
+                <button className="button" onClick={handleAssignUserToDevice}>Assign user</button>
+            </div>
 
             <div className="device-table">
                 <TableContainer component={Paper} sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
@@ -189,7 +253,7 @@ function DeviceOperations() {
                     </Table>
                 </TableContainer>
             </div>
-        </div>
+        </div >
     );
 }
 
