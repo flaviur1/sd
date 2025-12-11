@@ -1,6 +1,5 @@
 package com.example.auth_microservice.controller;
 
-
 import com.example.auth_microservice.entity.AuthRequest;
 import com.example.auth_microservice.entity.RegisterRequest;
 import com.example.auth_microservice.entity.UserInfo;
@@ -35,7 +34,8 @@ public class UserInfoController {
     private AuthenticationManager authenticationManager;
     private final RestTemplate restTemplate;
 
-    public UserInfoController(UserInfoService userInfoService, JwtService jwtService, AuthenticationManager authenticationManager, RestTemplateBuilder restTemplateBuilder) {
+    public UserInfoController(UserInfoService userInfoService, JwtService jwtService,
+                              AuthenticationManager authenticationManager, RestTemplateBuilder restTemplateBuilder) {
         this.userInfoService = userInfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -66,7 +66,8 @@ public class UserInfoController {
     }
 
     @PostMapping("/registerByAdmin")
-    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest,
+                                                  @RequestHeader("Authorization") String token) {
         UUID id = UUID.randomUUID();
         String roles = registerRequest.getRoles();
         if (roles == null || roles.isEmpty()) {
@@ -98,8 +99,7 @@ public class UserInfoController {
     @PostMapping("/login")
     public ResponseEntity<String> loginAndGenerateToken(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
 
@@ -134,7 +134,8 @@ public class UserInfoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id,
+                                                   @RequestHeader("Authorization") String token) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", token);
@@ -144,8 +145,7 @@ public class UserInfoController {
                     "http://user-service:8080/users/" + id,
                     HttpMethod.DELETE,
                     requestEntity,
-                    Void.class
-            );
+                    Void.class);
             userInfoService.deleteUser(id);
             return ResponseEntity.ok("User deleted successfully from all databases.");
         } catch (Exception e) {

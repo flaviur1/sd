@@ -73,4 +73,15 @@ public class UserInfoService implements UserDetailsService {
             return "User with id " + id + " was made an admin.";
         }
     }
+
+    public UserInfo updateUsername(UUID id, String username) {
+        Optional<UserInfo> optionalUserInfo = userInfoRepository.findById(id);
+        if (!optionalUserInfo.isPresent()) {
+            throw new RuntimeException("User with id " + id + " was not found");
+        }
+        UserInfo userInfo = optionalUserInfo.get();
+        userInfo.setUsername(username);
+        userInfoRepository.save(userInfo);
+        return userInfo;
+    }
 }

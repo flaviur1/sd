@@ -28,7 +28,7 @@ function LoginPage() {
             const roles = decoded.roles;
             console.log("Login successful");
 
-            if (roles.includes("ROLE_ADMIN")) {
+            if (roles.includes("ROLE_ADMIN") || roles.includes("ROLE_USER,ROLE_ADMIN")) {
                 navigate("/admin/dash");
             } else {
                 navigate("/user/dash");

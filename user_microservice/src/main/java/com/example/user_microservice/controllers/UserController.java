@@ -48,13 +48,15 @@ public class UserController {
             restTemplate.postForEntity("http://device-service:8080/device-user/addByForm", userProfile, Void.class);
         } catch (Exception e) {
             userService.deleteById(user.getId());
-            return ResponseEntity.status(500).body("Registration failed: Could not create user profile (user-service).");
+            return ResponseEntity.status(500)
+                    .body("Registration failed: Could not create user profile (user-service).");
         }
         return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/byAdmin")
-    public ResponseEntity<String> createByAdmin(@Valid @RequestBody UserDetailsDTO user, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> createByAdmin(@Valid @RequestBody UserDetailsDTO user,
+            @RequestHeader("Authorization") String token) {
         userService.insert(user);
         try {
             Map<String, Object> userProfile = new HashMap<>();
@@ -80,8 +82,38 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDetailsDTO> putUserById(@PathVariable UUID id, @RequestBody UserDetailsDTO user) {
-        return ResponseEntity.ok(userService.putUserById(id, user));
+    public ResponseEntity<UserDetailsDTO> putUserById(@PathVariable UUID id, @RequestBody UserDetailsDTO user,
+            @RequestHeader("Authorization") String token) {
+        try {
+            Map<String, Object> userProfile = new HashMap<>();
+            userProfile.put("id", id);
+            userProfile.put("username", user.getName());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+
+            // Propagate to device service first
+            restTemplate.exchange(
+                    "http://device-service:8080/device-user/" + id,
+                    HttpMethod.PUT,
+                    requestEntity,
+                    Void.class);
+
+            // Propagate to auth service
+            restTemplate.exchange(
+                    "http://auth-service:8080/auth/update/" + id,
+                    HttpMethod.PUT,
+                    requestEntity,
+                    Void.class);
+
+            // Only update user service if both propagations succeed
+            UserDetailsDTO u = userService.putUserById(id, user);
+            return ResponseEntity.ok(u);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(user);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -95,8 +127,7 @@ public class UserController {
                     "http://device-service:8080/device-user/" + id,
                     HttpMethod.DELETE,
                     requestEntity,
-                    Void.class
-            );
+                    Void.class);
             userService.deleteById(id);
             return ResponseEntity.ok("User deleted successfully from all databases.");
         } catch (Exception e) {
