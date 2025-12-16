@@ -26,6 +26,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/device-swag/**").permitAll()
                         .requestMatchers("/devices/getFor/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/devices/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/devices/**").hasAuthority("ROLE_ADMIN")

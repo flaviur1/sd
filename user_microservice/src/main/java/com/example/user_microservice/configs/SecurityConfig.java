@@ -28,6 +28,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user-swag/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/form").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ROLE_ADMIN")

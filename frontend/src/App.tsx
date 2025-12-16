@@ -21,8 +21,6 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
           <Route path="/admin/dash" element={<AdminDashboard />} />
         </Route>
-
-        <Route path="*" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   )

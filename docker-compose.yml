@@ -25,7 +25,7 @@ services:
     networks:
       - user-db-network
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   device_microservice:
     image: device-service:latest
@@ -53,7 +53,7 @@ services:
     networks:
       - device-db-network
     ports:
-      - "5433:5432"
+      - "5434:5432"
 
   auth_microservice:
     image: auth-service:latest
@@ -81,7 +81,7 @@ services:
     networks:
       - auth-db-network
     ports:
-      - "5434:5432"
+      - "5435:5432"
 
   frontend:
     build: ./frontend
