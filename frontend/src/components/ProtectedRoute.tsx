@@ -33,7 +33,7 @@ function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
     }
 
     const roles = decoded.roles;
-    if (requiredRole && roles !== requiredRole) {
+    if (requiredRole && !roles.includes(requiredRole)) {
         return <Navigate to="/" replace />;
     }
 

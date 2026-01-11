@@ -7,7 +7,7 @@ http:
         - web
       middlewares:
         - strip-api-prefix-swg
-      service: user_microservice_swg
+      service: user-microservice-swg
       priority: 101
 
     device-swagger-router:
@@ -16,7 +16,7 @@ http:
         - web
       middlewares:
         - strip-api-prefix-swg
-      service: device_microservice_swg
+      service: device-microservice-swg
       priority: 101
 
     auth-swagger-router:
@@ -25,7 +25,7 @@ http:
         - web
       middlewares:
         - strip-api-prefix-swg
-      service: auth_microservice_swg
+      service: auth-microservice-swg
       priority: 101
 
     user-microservice-router:
@@ -33,18 +33,20 @@ http:
       entryPoints:
         - web
       middlewares:
+        - forward-auth
         - strip-api-prefix
-      service: user_microservice
-      priority: 100
+      service: user-microservice
+      priority: 150
 
     device-microservice-router:
       rule: "Host(`localhost`) && PathPrefix(`/api/devices`) || PathPrefix(`/api/device-user`)"
       entryPoints:
         - web
       middlewares:
+        - forward-auth
         - strip-api-prefix
-      service: device_microservice
-      priority: 100
+      service: device-microservice
+      priority: 150
 
     auth-microservice-router:
       rule: "Host(`localhost`) && PathPrefix(`/api/auth`)"
@@ -52,17 +54,23 @@ http:
         - web
       middlewares:
         - strip-api-prefix
-      service: auth_microservice
-      priority: 100
+      service: auth-microservice
+      priority: 150
 
     frontend-router:
       rule: "Host(`localhost`) && PathPrefix(`/`)"
       entryPoints:
         - web
-      service: frontend_microservice
+      service: frontend-service
       priority: 100
 
   middlewares:
+    forward-auth:
+      forwardAuth:
+        address: "http://auth-microservice:8080/auth/validate"
+        authResponseHeaders:
+          - "UserId"
+          - "UserRoles"
     strip-api-prefix: # Middleware to remove /api prefix
       stripPrefix:
         prefixes:
@@ -79,34 +87,34 @@ http:
   #          - "user:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/" # password = "test"
   # pune un middleware de redirect catre validate din auth, sterge filtrele si security config din microserviici
   services:
-    user_microservice:
+    user-microservice:
       loadBalancer:
         servers:
-          - url: "http://user_microservice:8080"
-    user_microservice_swg:
+          - url: "http://user-microservice:8080"
+    user-microservice-swg:
       loadBalancer:
         servers:
-          - url: "http://user_microservice:8080"
+          - url: "http://user-microservice:8080"
 
-    device_microservice:
+    device-microservice:
       loadBalancer:
         servers:
-          - url: "http://device_microservice:8080"
-    device_microservice_swg:
+          - url: "http://device-microservice:8080"
+    device-microservice-swg:
       loadBalancer:
         servers:
-          - url: "http://device_microservice:8080"
+          - url: "http://device-microservice:8080"
 
-    auth_microservice:
+    auth-microservice:
       loadBalancer:
         servers:
-          - url: "http://auth_microservice:8080"
-    auth_microservice_swg:
+          - url: "http://auth-microservice:8080"
+    auth-microservice-swg:
       loadBalancer:
         servers:
-          - url: "http://auth_microservice:8080"
+          - url: "http://auth-microservice:8080"
 
-    frontend_microservice:
+    frontend-service:
       loadBalancer:
         servers:
           - url: "http://frontend:80"

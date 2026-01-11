@@ -6,7 +6,6 @@ import com.example.auth_microservice.entity.UserInfo;
 import com.example.auth_microservice.service.JwtService;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/auth")
-@Tag(name = "Auth", description = "Auth management APIs")
 public class UserInfoController {
 
     private final UserInfoService userInfoService;
@@ -66,8 +64,11 @@ public class UserInfoController {
     }
 
     @PostMapping("/registerByAdmin")
-    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest,
-                                                  @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String userId = jwtService.extractUserId(token);
+        String userRoles = jwtService.extractRoles(token);
+
         UUID id = UUID.randomUUID();
         String roles = registerRequest.getRoles();
         if (roles == null || roles.isEmpty()) {
@@ -83,7 +84,8 @@ public class UserInfoController {
             userProfile.put("age", registerRequest.getAge());
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("UserId", userId);
+            headers.set("UserRoles", userRoles);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
 
@@ -113,7 +115,7 @@ public class UserInfoController {
         }
     }
 
-    @PostMapping("/validate")
+    @RequestMapping(value = "/validate", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
     public ResponseEntity<Void> validate(@RequestHeader(value = "Authorization", required = false) String header) {
         if (header == null || !header.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -124,7 +126,15 @@ public class UserInfoController {
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = userInfoService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails)) {
-                return ResponseEntity.ok().build();
+                // Extract claims and return as headers for Traefik ForwardAuth
+                String roles = jwtService.extractRoles(token);
+                String userId = jwtService.extractUserId(token);
+
+                HttpHeaders responseHeaders = new HttpHeaders();
+                responseHeaders.set("UserId", userId);
+                responseHeaders.set("UserRoles", roles != null ? roles : "");
+
+                return ResponseEntity.ok().headers(responseHeaders).build();
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -134,11 +144,15 @@ public class UserInfoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id,
-                                                   @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String userId = jwtService.extractUserId(token);
+        String userRoles = jwtService.extractRoles(token);
+
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("UserId", userId);
+            headers.set("UserRoles", userRoles);
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
             restTemplate.exchange(

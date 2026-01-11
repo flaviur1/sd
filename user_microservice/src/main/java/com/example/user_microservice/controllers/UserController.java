@@ -56,7 +56,7 @@ public class UserController {
 
     @PostMapping("/byAdmin")
     public ResponseEntity<String> createByAdmin(@Valid @RequestBody UserDetailsDTO user,
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("UserId") String userId, @RequestHeader("UserRoles") String userRoles) {
         userService.insert(user);
         try {
             Map<String, Object> userProfile = new HashMap<>();
@@ -64,7 +64,8 @@ public class UserController {
             userProfile.put("username", user.getName());
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("UserId", userId);
+            headers.set("UserRoles", userRoles);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
 
@@ -83,32 +84,24 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDetailsDTO> putUserById(@PathVariable UUID id, @RequestBody UserDetailsDTO user,
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("UserId") String userId, @RequestHeader("UserRoles") String userRoles) {
         try {
             Map<String, Object> userProfile = new HashMap<>();
             userProfile.put("id", id);
             userProfile.put("username", user.getName());
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("UserId", userId);
+            headers.set("UserRoles", userRoles);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
 
-            // Propagate to device service first
             restTemplate.exchange(
                     "http://device-service:8080/device-user/" + id,
                     HttpMethod.PUT,
                     requestEntity,
                     Void.class);
 
-            // Propagate to auth service
-            restTemplate.exchange(
-                    "http://auth-service:8080/auth/update/" + id,
-                    HttpMethod.PUT,
-                    requestEntity,
-                    Void.class);
-
-            // Only update user service if both propagations succeed
             UserDetailsDTO u = userService.putUserById(id, user);
             return ResponseEntity.ok(u);
         } catch (Exception e) {
@@ -117,10 +110,12 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable UUID id, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deleteUserById(@PathVariable UUID id, @RequestHeader("UserId") String userId,
+            @RequestHeader("UserRoles") String userRoles) {
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("UserId", userId);
+            headers.set("UserRoles", userRoles);
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
             restTemplate.exchange(

@@ -37,8 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/device-user/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/device-user/**").authenticated()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(tokenValidationFilter, UsernamePasswordAuthenticationFilter.class);
 
