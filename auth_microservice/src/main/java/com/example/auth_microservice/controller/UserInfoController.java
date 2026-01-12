@@ -4,7 +4,7 @@ import com.example.auth_microservice.entity.AuthRequest;
 import com.example.auth_microservice.entity.RegisterRequest;
 import com.example.auth_microservice.entity.UserInfo;
 import com.example.auth_microservice.service.JwtService;
-import com.example.auth_microservice.service.UserEventPublisher;
+import com.example.auth_microservice.service.rabbitMQ.UserEventPublisher;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
 import org.springframework.boot.web.client.RestTemplateBuilder;

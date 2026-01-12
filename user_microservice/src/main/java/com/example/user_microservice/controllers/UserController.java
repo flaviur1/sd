@@ -3,6 +3,7 @@ package com.example.user_microservice.controllers;
 import com.example.user_microservice.dtos.UserDTO;
 import com.example.user_microservice.dtos.UserDetailsDTO;
 import com.example.user_microservice.services.UserService;
+import com.example.user_microservice.services.rabbitMQ.UserEventPublisher;
 import jakarta.validation.Valid;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -26,10 +27,13 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final RestTemplate restTemplate;
+    private final UserEventPublisher userEventPublisher;
 
-    public UserController(UserService userService, RestTemplateBuilder restTemplateBuilder) {
+    public UserController(UserService userService, RestTemplateBuilder restTemplateBuilder,
+            UserEventPublisher userEventPublisher) {
         this.userService = userService;
         this.restTemplate = restTemplateBuilder.build();
+        this.userEventPublisher = userEventPublisher;
     }
 
     @GetMapping
@@ -41,15 +45,16 @@ public class UserController {
     public ResponseEntity<String> createByForm(@Valid @RequestBody UserDetailsDTO user) {
         userService.insert(user);
         // try {
-        //     Map<String, Object> userProfile = new HashMap<>();
-        //     userProfile.put("id", user.getId());
-        //     userProfile.put("username", user.getName());
+        // Map<String, Object> userProfile = new HashMap<>();
+        // userProfile.put("id", user.getId());
+        // userProfile.put("username", user.getName());
 
-        //     restTemplate.postForEntity("http://device-service:8080/device-user/addByForm", userProfile, Void.class);
+        // restTemplate.postForEntity("http://device-service:8080/device-user/addByForm",
+        // userProfile, Void.class);
         // } catch (Exception e) {
-        //     userService.deleteById(user.getId());
-        //     return ResponseEntity.status(500)
-        //             .body("Registration failed: Could not create user profile (user-service).");
+        // userService.deleteById(user.getId());
+        // return ResponseEntity.status(500)
+        // .body("Registration failed: Could not create user profile (user-service).");
         // }
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -59,20 +64,23 @@ public class UserController {
             @RequestHeader("UserId") String userId, @RequestHeader("UserRoles") String userRoles) {
         userService.insert(user);
         // try {
-        //     Map<String, Object> userProfile = new HashMap<>();
-        //     userProfile.put("id", user.getId());
-        //     userProfile.put("username", user.getName());
+        // Map<String, Object> userProfile = new HashMap<>();
+        // userProfile.put("id", user.getId());
+        // userProfile.put("username", user.getName());
 
-        //     HttpHeaders headers = new HttpHeaders();
-        //     headers.set("UserId", userId);
-        //     headers.set("UserRoles", userRoles);
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.set("UserId", userId);
+        // headers.set("UserRoles", userRoles);
 
-        //     HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+        // HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile,
+        // headers);
 
-        //     restTemplate.postForEntity("http://device-service:8080/device-user/addByAdmin", requestEntity, Void.class);
+        // restTemplate.postForEntity("http://device-service:8080/device-user/addByAdmin",
+        // requestEntity, Void.class);
         // } catch (Exception e) {
-        //     userService.deleteById(user.getId());
-        //     return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
+        // userService.deleteById(user.getId());
+        // return ResponseEntity.status(500).body("Registration failed: Could not create
+        // user profile.");
         // }
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -85,48 +93,53 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDetailsDTO> putUserById(@PathVariable UUID id, @RequestBody UserDetailsDTO user,
             @RequestHeader("UserId") String userId, @RequestHeader("UserRoles") String userRoles) {
-        try {
-            Map<String, Object> userProfile = new HashMap<>();
-            userProfile.put("id", id);
-            userProfile.put("username", user.getName());
+        // try {
+        // Map<String, Object> userProfile = new HashMap<>();
+        // userProfile.put("id", id);
+        // userProfile.put("username", user.getName());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("UserId", userId);
-            headers.set("UserRoles", userRoles);
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.set("UserId", userId);
+        // headers.set("UserRoles", userRoles);
 
-            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+        // HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile,
+        // headers);
 
-            restTemplate.exchange(
-                    "http://device-service:8080/device-user/" + id,
-                    HttpMethod.PUT,
-                    requestEntity,
-                    Void.class);
+        // restTemplate.exchange(
+        // "http://device-service:8080/device-user/" + id,
+        // HttpMethod.PUT,
+        // requestEntity,
+        // Void.class);
 
-            UserDetailsDTO u = userService.putUserById(id, user);
-            return ResponseEntity.ok(u);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(user);
-        }
+        // UserDetailsDTO u = userService.putUserById(id, user);
+        // return ResponseEntity.ok(u);
+        // } catch (Exception e) {
+        // return ResponseEntity.status(500).body(user);
+        // }
+        userEventPublisher.publishUserUpdated(id, user.getName(), user.getAddress(), user.getAge());
+        UserDetailsDTO u = userService.putUserById(id, user);
+        return ResponseEntity.ok(u);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable UUID id, @RequestHeader("UserId") String userId,
             @RequestHeader("UserRoles") String userRoles) {
         // try {
-        //     HttpHeaders headers = new HttpHeaders();
-        //     headers.set("UserId", userId);
-        //     headers.set("UserRoles", userRoles);
-        //     HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.set("UserId", userId);
+        // headers.set("UserRoles", userRoles);
+        // HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
-        //     restTemplate.exchange(
-        //             "http://device-service:8080/device-user/" + id,
-        //             HttpMethod.DELETE,
-        //             requestEntity,
-        //             Void.class);
-        //     userService.deleteById(id);
-        //     return ResponseEntity.ok("User deleted successfully from all databases.");
+        // restTemplate.exchange(
+        // "http://device-service:8080/device-user/" + id,
+        // HttpMethod.DELETE,
+        // requestEntity,
+        // Void.class);
+        // userService.deleteById(id);
+        // return ResponseEntity.ok("User deleted successfully from all databases.");
         // } catch (Exception e) {
-        //     return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
+        // return ResponseEntity.status(500).body("Error deleting user: " +
+        // e.getMessage());
         // }
         userService.deleteById(id);
         return ResponseEntity.ok("User deleted successfully from all databases.");

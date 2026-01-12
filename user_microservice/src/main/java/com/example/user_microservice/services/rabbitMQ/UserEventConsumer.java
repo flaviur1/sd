@@ -1,4 +1,4 @@
-package com.example.user_microservice.services;
+package com.example.user_microservice.services.rabbitMQ;
 
 import com.example.user_microservice.configs.RabbitMQConfig;
 import com.example.user_microservice.dtos.rabbitMQ.UserCreatedEvent;

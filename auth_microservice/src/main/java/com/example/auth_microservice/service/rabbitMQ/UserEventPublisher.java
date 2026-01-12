@@ -1,4 +1,4 @@
-package com.example.auth_microservice.service;
+package com.example.auth_microservice.service.rabbitMQ;
 
 import com.example.auth_microservice.config.RabbitMQConfig;
 import com.example.auth_microservice.entity.rabbitMQ.UserCreatedEvent;
@@ -32,7 +32,6 @@ public class UserEventPublisher {
             logger.info("Published user.created event for user: {} with ID: {}", username, userId);
         } catch (Exception e) {
             logger.error("Failed to publish user.created event for user: {}", username, e);
-            // Don't throw - we don't want to break user registration if messaging fails
         }
     }
 

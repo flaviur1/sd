@@ -19,8 +19,10 @@ public class RabbitMQConfig {
     public static final String SYNC_EXCHANGE = "sync-exchange";
     public static final String DEVICE_USER_SYNC_QUEUE = "device-user-sync-queue";
     public static final String DEVICE_USER_DELETE_QUEUE = "device-user-delete-queue";
+    public static final String DEVICE_USER_UPDATE_QUEUE = "device-user-update-queue";
     public static final String DEVICE_USER_CREATED_ROUTING_KEY = "sync.user.created";
     public static final String DEVICE_USER_DELETED_ROUTING_KEY = "sync.user.deleted";
+    public static final String DEVICE_USER_UPDATED_ROUTING_KEY = "sync.user.updated";
 
     @Bean
     public TopicExchange syncExchange() {
@@ -51,6 +53,19 @@ public class RabbitMQConfig {
                 .bind(deviceDeleteUserQueue)
                 .to(syncExchange)
                 .with(DEVICE_USER_DELETED_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue deviceUpdateUserQueue() {
+        return new Queue(DEVICE_USER_UPDATE_QUEUE, true);
+    }
+
+    @Bean
+    public Binding deviceUpdateUserBinding(Queue deviceUpdateUserQueue, TopicExchange syncExchange) {
+        return BindingBuilder
+                .bind(deviceUpdateUserQueue)
+                .to(syncExchange)
+                .with(DEVICE_USER_UPDATED_ROUTING_KEY);
     }
 
     @Bean

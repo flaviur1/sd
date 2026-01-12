@@ -19,6 +19,7 @@ public class RabbitMQConfig {
     public static final String USER_DELETE_QUEUE = "user-delete-queue";
     public static final String USER_CREATED_ROUTING_KEY = "sync.user.created";
     public static final String USER_DELETED_ROUTING_KEY = "sync.user.deleted";
+    public static final String USER_UPDATED_ROUTING_KEY = "sync.user.updated";
 
     @Bean
     public TopicExchange syncExchange() {
