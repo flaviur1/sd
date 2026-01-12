@@ -1,4 +1,6 @@
-package com.example.user_microservice.configs;
+package com.example.device_microservice.configs;
+
+import java.util.function.BinaryOperator;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -15,10 +17,10 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String SYNC_EXCHANGE = "sync-exchange";
-    public static final String USER_SYNC_QUEUE = "user-sync-queue";
-    public static final String USER_DELETE_QUEUE = "user-delete-queue";
-    public static final String USER_CREATED_ROUTING_KEY = "sync.user.created";
-    public static final String USER_DELETED_ROUTING_KEY = "sync.user.deleted";
+    public static final String DEVICE_USER_SYNC_QUEUE = "device-user-sync-queue";
+    public static final String DEVICE_USER_DELETE_QUEUE = "device-user-delete-queue";
+    public static final String DEVICE_USER_CREATED_ROUTING_KEY = "sync.user.created";
+    public static final String DEVICE_USER_DELETED_ROUTING_KEY = "sync.user.deleted";
 
     @Bean
     public TopicExchange syncExchange() {
@@ -26,29 +28,29 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue userSyncQueue() {
-        return new Queue(USER_SYNC_QUEUE, true);
+    public Queue deviceSyncQueue() {
+        return new Queue(DEVICE_USER_SYNC_QUEUE, true);
     }
 
     @Bean
-    public Binding userSyncBinding(Queue userSyncQueue, TopicExchange syncExchange) {
+    public Binding deviceSyncBinding(Queue deviceSyncQueue, TopicExchange syncExchange) {
         return BindingBuilder
-                .bind(userSyncQueue)
+                .bind(deviceSyncQueue)
                 .to(syncExchange)
-                .with(USER_CREATED_ROUTING_KEY);
+                .with(DEVICE_USER_CREATED_ROUTING_KEY);
     }
 
     @Bean
-    public Queue userDeleteQueue() {
-        return new Queue(USER_DELETE_QUEUE, true);
+    public Queue deviceDeleteUserQueue() {
+        return new Queue(DEVICE_USER_DELETE_QUEUE, true);
     }
 
     @Bean
-    public Binding userDeleteBinding(Queue userDeleteQueue, TopicExchange syncExchange) {
+    public Binding deviceDeleteUserBinding(Queue deviceDeleteUserQueue, TopicExchange syncExchange) {
         return BindingBuilder
-                .bind(userDeleteQueue)
+                .bind(deviceDeleteUserQueue)
                 .to(syncExchange)
-                .with(USER_DELETED_ROUTING_KEY);
+                .with(DEVICE_USER_DELETED_ROUTING_KEY);
     }
 
     @Bean
