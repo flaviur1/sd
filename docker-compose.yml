@@ -14,6 +14,7 @@ services:
       - user-db-network
     depends_on:
       - db-user
+      - rabbitmq
 
   db-user:
     image: postgres
@@ -42,6 +43,7 @@ services:
       - device-db-network
     depends_on:
       - db-device
+      - rabbitmq
 
   db-device:
     image: postgres
@@ -70,6 +72,7 @@ services:
       - auth-db-network
     depends_on:
       - db-auth
+      - rabbitmq
 
   db-auth:
     image: postgres
@@ -105,6 +108,23 @@ services:
       - "./logs:/var/log/traefik"
     networks:
       - proxy-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - proxy-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   proxy-network:

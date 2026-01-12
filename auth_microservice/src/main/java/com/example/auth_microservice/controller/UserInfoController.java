@@ -4,6 +4,7 @@ import com.example.auth_microservice.entity.AuthRequest;
 import com.example.auth_microservice.entity.RegisterRequest;
 import com.example.auth_microservice.entity.UserInfo;
 import com.example.auth_microservice.service.JwtService;
+import com.example.auth_microservice.service.UserEventPublisher;
 import com.example.auth_microservice.service.UserInfoDetails;
 import com.example.auth_microservice.service.UserInfoService;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -31,13 +32,16 @@ public class UserInfoController {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
     private final RestTemplate restTemplate;
+    private final UserEventPublisher userEventPublisher;
 
     public UserInfoController(UserInfoService userInfoService, JwtService jwtService,
-                              AuthenticationManager authenticationManager, RestTemplateBuilder restTemplateBuilder) {
+            AuthenticationManager authenticationManager, RestTemplateBuilder restTemplateBuilder,
+            UserEventPublisher userEventPublisher) {
         this.userInfoService = userInfoService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.restTemplate = restTemplateBuilder.build();
+        this.userEventPublisher = userEventPublisher;
     }
 
     @PostMapping("/registerByForm")
@@ -46,25 +50,30 @@ public class UserInfoController {
         String roles = "ROLE_USER";
         UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), roles);
         userInfoService.addUser(userInfo);
-        try {
-            Map<String, Object> userProfile = new HashMap<>();
-            userProfile.put("id", id);
-            userProfile.put("name", registerRequest.getUsername());
-            userProfile.put("address", registerRequest.getAddress());
-            userProfile.put("age", registerRequest.getAge());
+        // try {
+        // Map<String, Object> userProfile = new HashMap<>();
+        // userProfile.put("id", id);
+        // userProfile.put("name", registerRequest.getUsername());
+        // userProfile.put("address", registerRequest.getAddress());
+        // userProfile.put("age", registerRequest.getAge());
 
-            restTemplate.postForEntity("http://user-service:8080/users/form", userProfile, Void.class);
+        // restTemplate.postForEntity("http://user-service:8080/users/form",
+        // userProfile, Void.class);
 
-        } catch (Exception e) {
-            userInfoService.deleteUser(userInfo.getId());
-            return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
-        }
+        // } catch (Exception e) {
+        // userInfoService.deleteUser(userInfo.getId());
+        // return ResponseEntity.status(500).body("Registration failed: Could not create
+        // user profile.");
+        // }
+        userEventPublisher.publishUserCreated(id, registerRequest.getUsername(),
+                registerRequest.getAddress(), registerRequest.getAge());
 
         return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/registerByAdmin")
-    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<String> registerByAdmin(@RequestBody RegisterRequest registerRequest,
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         String userId = jwtService.extractUserId(token);
         String userRoles = jwtService.extractRoles(token);
@@ -76,24 +85,30 @@ public class UserInfoController {
         }
         UserInfo userInfo = new UserInfo(id, registerRequest.getUsername(), registerRequest.getPassword(), roles);
         userInfoService.addUser(userInfo);
-        try {
-            Map<String, Object> userProfile = new HashMap<>();
-            userProfile.put("id", id);
-            userProfile.put("name", registerRequest.getUsername());
-            userProfile.put("address", registerRequest.getAddress());
-            userProfile.put("age", registerRequest.getAge());
+        // try {
+        // Map<String, Object> userProfile = new HashMap<>();
+        // userProfile.put("id", id);
+        // userProfile.put("name", registerRequest.getUsername());
+        // userProfile.put("address", registerRequest.getAddress());
+        // userProfile.put("age", registerRequest.getAge());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("UserId", userId);
-            headers.set("UserRoles", userRoles);
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.set("UserId", userId);
+        // headers.set("UserRoles", userRoles);
 
-            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile, headers);
+        // HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(userProfile,
+        // headers);
 
-            restTemplate.postForEntity("http://user-service:8080/users/byAdmin", requestEntity, Void.class);
-        } catch (Exception e) {
-            userInfoService.deleteUser(userInfo.getId());
-            return ResponseEntity.status(500).body("Registration failed: Could not create user profile.");
-        }
+        // restTemplate.postForEntity("http://user-service:8080/users/byAdmin",
+        // requestEntity, Void.class);
+        // } catch (Exception e) {
+        // userInfoService.deleteUser(userInfo.getId());
+        // return ResponseEntity.status(500).body("Registration failed: Could not create
+        // user profile.");
+        // }
+
+        userEventPublisher.publishUserCreated(id, registerRequest.getUsername(),
+                registerRequest.getAddress(), registerRequest.getAge());
 
         return ResponseEntity.ok("User created successfully!");
     }
@@ -115,7 +130,8 @@ public class UserInfoController {
         }
     }
 
-    @RequestMapping(value = "/validate", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+    @RequestMapping(value = "/validate", method = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+            RequestMethod.DELETE })
     public ResponseEntity<Void> validate(@RequestHeader(value = "Authorization", required = false) String header) {
         if (header == null || !header.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -144,27 +160,33 @@ public class UserInfoController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<String> deleteByUsername(@PathVariable UUID id,
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         String userId = jwtService.extractUserId(token);
         String userRoles = jwtService.extractRoles(token);
 
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("UserId", userId);
-            headers.set("UserRoles", userRoles);
-            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+        // try {
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.set("UserId", userId);
+        // headers.set("UserRoles", userRoles);
+        // HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
-            restTemplate.exchange(
-                    "http://user-service:8080/users/" + id,
-                    HttpMethod.DELETE,
-                    requestEntity,
-                    Void.class);
-            userInfoService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully from all databases.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error deleting user: " + e.getMessage());
-        }
+        // restTemplate.exchange(
+        // "http://user-service:8080/users/" + id,
+        // HttpMethod.DELETE,
+        // requestEntity,
+        // Void.class);
+        // userInfoService.deleteUser(id);
+        // return ResponseEntity.ok("User deleted successfully from all databases.");
+        // } catch (Exception e) {
+        // return ResponseEntity.status(500).body("Error deleting user: " +
+        // e.getMessage());
+        // }
+
+        userEventPublisher.publishUserDeleted(id);
+        userInfoService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully from all databases.");
     }
 
     @PutMapping("/admin/makeAdmin/{id}")
