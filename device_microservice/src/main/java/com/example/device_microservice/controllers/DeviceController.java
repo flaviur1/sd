@@ -3,6 +3,7 @@ package com.example.device_microservice.controllers;
 import com.example.device_microservice.dtos.DeviceDTO;
 import com.example.device_microservice.dtos.DeviceDetailsDTO;
 import com.example.device_microservice.services.DeviceService;
+import com.example.device_microservice.services.rabbitMQ.DeviceEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import java.util.UUID;
 public class DeviceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceController.class);
     private final DeviceService deviceService;
+    private final DeviceEventPublisher deviceEventPublisher;
 
     @Autowired
-    public DeviceController(DeviceService deviceService) {
+    public DeviceController(DeviceService deviceService, DeviceEventPublisher deviceEventPublisher) {
         this.deviceService = deviceService;
+        this.deviceEventPublisher = deviceEventPublisher;
     }
 
     @GetMapping
@@ -45,17 +48,22 @@ public class DeviceController {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
+        deviceEventPublisher.publishDeviceCreated(id, device.getMaxConsVal(), device.getUserId());
         return ResponseEntity.created(location).build(); // 201 + Location header
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DeviceDetailsDTO> updateDeviceById(@PathVariable UUID id, @RequestBody DeviceDetailsDTO device) {
-        return ResponseEntity.ok(deviceService.updateDeviceById(id, device));
+        DeviceDetailsDTO response = deviceService.updateDeviceById(id, device);
+        deviceEventPublisher.publishDeviceUpdated(id, device.getMaxConsVal(), device.getUserId());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable UUID id) {
-        return ResponseEntity.ok(deviceService.deleteById(id));
+        String response = deviceService.deleteById(id);
+        deviceEventPublisher.publishDeviceDeleted(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/getFor/{id}")
@@ -65,6 +73,8 @@ public class DeviceController {
 
     @PutMapping("/assign/{id}")
     public ResponseEntity<DeviceDetailsDTO> assignDeviceToUser(@PathVariable UUID id, @RequestBody DeviceDetailsDTO device) {
-        return ResponseEntity.ok(deviceService.updateDeviceById(id, device));
+        DeviceDetailsDTO response = deviceService.updateDeviceById(id, device);
+        deviceEventPublisher.publishDeviceUpdated(id, device.getMaxConsVal(), device.getUserId());
+        return ResponseEntity.ok(response);
     }
 }

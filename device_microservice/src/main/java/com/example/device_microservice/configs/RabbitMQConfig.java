@@ -23,6 +23,9 @@ public class RabbitMQConfig {
     public static final String DEVICE_USER_CREATED_ROUTING_KEY = "sync.user.created";
     public static final String DEVICE_USER_DELETED_ROUTING_KEY = "sync.user.deleted";
     public static final String DEVICE_USER_UPDATED_ROUTING_KEY = "sync.user.updated";
+    public static final String DEVICE_CREATED_ROUTING_KEY = "sync.device.created";
+    public static final String DEVICE_DELETED_ROUTING_KEY = "sync.device.deleted";
+    public static final String DEVICE_UPDATED_ROUTING_KEY = "sync.device.updated";
 
     @Bean
     public TopicExchange syncExchange() {

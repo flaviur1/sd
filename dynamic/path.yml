@@ -57,6 +57,16 @@ http:
       service: auth-microservice
       priority: 150
 
+    monitoring-microservice-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/monitor`)"
+      entryPoints:
+        - web
+      middlewares:
+        - forward-auth
+        - strip-api-prefix
+      service: monitoring-microservice
+      priority: 150
+
     frontend-router:
       rule: "Host(`localhost`) && PathPrefix(`/`)"
       entryPoints:
@@ -113,6 +123,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://auth-microservice:8080"
+
+    monitoring-microservice:
+      loadBalancer:
+        servers:
+          - url: "http://monitoring-microservice:8080"
 
     frontend-service:
       loadBalancer:

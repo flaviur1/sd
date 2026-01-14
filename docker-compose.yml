@@ -8,7 +8,6 @@ services:
       DB_USER: postgres
       DB_PASSWORD: admin
       DB_DBNAME: userDB
-      JWT_SECRET: ${JWT_SECRET}
     networks:
       - proxy-network
       - user-db-network
@@ -37,7 +36,6 @@ services:
       DB_USER: postgres
       DB_PASSWORD: admin
       DB_DBNAME: deviceDB
-      JWT_SECRET: ${JWT_SECRET}
     networks:
       - proxy-network
       - device-db-network
@@ -85,6 +83,34 @@ services:
       - auth-db-network
     ports:
       - "5435:5432"
+
+  monitoring-microservice:
+    image: monitoring-service:latest
+    container_name: monitoring-service
+    environment:
+      DB_IP: db-monitoring
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DBNAME: monitorDB
+    networks:
+      - proxy-network
+      - monitoring-db-network
+    depends_on:
+      - db-monitoring
+      - rabbitmq
+
+  db-monitoring:
+    image: postgres
+    container_name: db-monitoring
+    environment:
+      POSTGRES_DB: monitorDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    networks:
+      - monitoring-db-network
+    ports:
+      - "5436:5432"
 
   frontend:
     build: ./frontend
@@ -135,4 +161,6 @@ networks:
   device-db-network:
     driver: bridge
   auth-db-network:
+    driver: bridge
+  monitoring-db-network:
     driver: bridge

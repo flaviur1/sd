@@ -1,4 +1,4 @@
-package com.example.device_microservice.filters;
+package com.example.monitoring_microservice.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,8 +23,8 @@ public class TokenValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String userIdHeader = request.getHeader("UserId");
         String rolesHeader = request.getHeader("UserRoles");
@@ -40,8 +40,8 @@ public class TokenValidationFilter extends OncePerRequestFilter {
             List<SimpleGrantedAuthority> authorities = (rolesHeader == null || rolesHeader.isEmpty())
                     ? Collections.emptyList()
                     : Arrays.stream(rolesHeader.split(","))
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null,
                     authorities);
