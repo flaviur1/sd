@@ -5,8 +5,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -24,9 +24,8 @@ public class EnergyReading {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private Integer hour;
@@ -42,7 +41,7 @@ public class EnergyReading {
         this.timestamp = timestamp;
         this.consumptionValue = consumptionValue;
         this.hour = timestamp.getHour();
-        this.date = Date.from(timestamp.toLocalDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
+        this.date = timestamp.toLocalDate();
     }
 
     public UUID getId() {
@@ -68,14 +67,14 @@ public class EnergyReading {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
         this.hour = timestamp.getHour();
-        this.date = Date.from(timestamp.toLocalDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
+        this.date = timestamp.toLocalDate();
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

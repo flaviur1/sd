@@ -1,0 +1,13 @@
+172.18.0.1 - - [14/Jan/2026:13:19:54 +0000] "GET / HTTP/1.1" 200 455 "-" "-" 1 "frontend-router@file" "http://frontend:80" 110ms
+172.18.0.1 - - [14/Jan/2026:13:19:54 +0000] "GET /assets/index-CvnBaHA4.css HTTP/1.1" 200 391 "-" "-" 3 "frontend-router@file" "http://frontend:80" 19ms
+172.18.0.1 - - [14/Jan/2026:13:19:54 +0000] "GET /assets/index-2PeAn6xU.js HTTP/1.1" 200 130857 "-" "-" 2 "frontend-router@file" "http://frontend:80" 55ms
+172.18.0.1 - - [14/Jan/2026:13:19:54 +0000] "GET /vite.svg HTTP/1.1" 200 791 "-" "-" 4 "frontend-router@file" "http://frontend:80" 36ms
+172.18.0.1 - - [14/Jan/2026:13:19:56 +0000] "POST /api/auth/login HTTP/1.1" 200 223 "-" "-" 5 "auth-microservice-router@file" "http://auth-microservice:8080" 610ms
+172.18.0.1 - - [14/Jan/2026:13:19:57 +0000] "GET /api/device-user HTTP/1.1" 200 2 "-" "-" 7 "device-microservice-router@file" "http://device-microservice:8080" 470ms
+172.18.0.1 - - [14/Jan/2026:13:19:57 +0000] "GET /api/devices HTTP/1.1" 200 2 "-" "-" 6 "device-microservice-router@file" "http://device-microservice:8080" 487ms
+172.18.0.1 - - [14/Jan/2026:13:19:58 +0000] "GET /api/users HTTP/1.1" 200 2 "-" "-" 8 "user-microservice-router@file" "http://user-microservice:8080" 514ms
+172.18.0.1 - - [14/Jan/2026:13:20:04 +0000] "POST /api/auth/registerByAdmin HTTP/1.1" 200 26 "-" "-" 9 "auth-microservice-router@file" "http://auth-microservice:8080" 328ms
+172.18.0.1 - - [14/Jan/2026:13:20:05 +0000] "GET /api/users HTTP/1.1" 200 2 "-" "-" 10 "user-microservice-router@file" "http://user-microservice:8080" 58ms
+172.18.0.1 - - [14/Jan/2026:13:20:07 +0000] "GET /api/devices HTTP/1.1" 200 2 "-" "-" 11 "device-microservice-router@file" "http://device-microservice:8080" 38ms
+172.18.0.1 - - [14/Jan/2026:13:20:07 +0000] "GET /api/device-user HTTP/1.1" 200 67 "-" "-" 12 "device-microservice-router@file" "http://device-microservice:8080" 82ms
+172.18.0.1 - - [14/Jan/2026:13:20:07 +0000] "GET /api/users HTTP/1.1" 200 72 "-" "-" 13 "user-microservice-router@file" "http://user-microservice:8080" 54ms
