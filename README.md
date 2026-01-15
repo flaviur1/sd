@@ -7,16 +7,21 @@ Aplicație bazată pe microservicii pentru gestionarea consumului de energie ale
 - **Backend**: Java, Spring Boot
 - **Frontend**: React + TypeScript + Vite + Material-UI
 - **Bază de date**: PostgreSQL
+- **Message Broker**: RabbitMQ
+- **Real-time Communication**: WebSocket
 - **Reverse Proxy & API Gateway**: Traefik
 - **Containerizare**: Docker
 - **Autentificare**: JWT
+- **Simulator**: Python
 
 ## Structura proiectului
 
 - **auth_microservice** – autentificare (login, register, JWT)
 - **user_microservice** – CRUD utilizatori
 - **device_microservice** – CRUD dispozitive, device-user
+- **monitoring_microservice** – monitorizare consum energie, WebSocket real-time
 - **frontend** – interfață web React
+- **simulator.py** – simulator pentru generare date consum energie
 - **docker-compose.yml** – orchestrare containere
 - **traefik.yml** – configurare reverse proxy
 
@@ -25,6 +30,7 @@ Aplicație bazată pe microservicii pentru gestionarea consumului de energie ale
 - Docker & Docker Compose
 - Java JDK 21+ (pentru development local)
 - Node.js & npm (pentru development local)
+- Python 3.8+ (pentru simulator)
 
 ## Structura bazei de date
 
@@ -47,6 +53,16 @@ Aplicație bazată pe microservicii pentru gestionarea consumului de energie ale
 - password: String (hashed)
 - roles: String
 
+**Monitoring (monitorDB)**:
+- Device (cache):
+  - id: UUID
+  - userId: UUID
+- EnergyReading:
+  - id: Long
+  - deviceId: UUID
+  - timestamp: Timestamp
+  - energyConsumption: Double
+
 ## Rulare proiect
 
 ```bash
@@ -61,6 +77,8 @@ docker build -t auth-service:latest ./auth_microservice
 docker build -t user-service:latest ./user_microservice
 
 docker build -t device-service:latest ./device_microservice
+
+docker build -t monitoring-service:latest ./monitoring_microservice
 
 docker build -t frontend:latest ./frontend
 ```
@@ -79,4 +97,16 @@ docker-compose down
 
 ## Accesare aplicație
 
-- **Traefik Dashboard**: http://localhost:8080`
+- **Frontend**: http://localhost
+- **Traefik Dashboard**: http://localhost:8080
+- **RabbitMQ Management**: http://localhost:15672 (guest/guest)
+
+### Simulator consum energie
+
+Pentru a genera date de consum energie în timp real:
+
+```bash
+python simulator.py <device id>
+```
+
+Simulatorul trimite date către serviciul de monitoring prin RabbitMQ.
