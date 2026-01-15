@@ -67,6 +67,15 @@ http:
       service: monitoring-microservice
       priority: 150
 
+    monitoring-websocket-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/ws`)"
+      entryPoints:
+        - web
+      middlewares:
+        - strip-api-prefix
+      service: monitoring-microservice
+      priority: 150
+
     frontend-router:
       rule: "Host(`localhost`) && PathPrefix(`/`)"
       entryPoints:

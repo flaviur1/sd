@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import { jwtDecode } from "jwt-decode";
 
 interface Device {
@@ -72,6 +73,7 @@ function UserDashboard() {
                                 <TableCell align="left" sx={{ color: 'white' }}>Manufacturer</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Model</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Max Consumption</TableCell>
+                                <TableCell align="center" sx={{ color: 'white' }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -84,6 +86,11 @@ function UserDashboard() {
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.manufacturer}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.model}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.maxConsVal}</TableCell>
+                                    <TableCell align="center">
+                                        <Button variant="contained" size="small" onClick={() => navigate(`/monitoring/${row.id}`)}>
+                                            View Graph
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

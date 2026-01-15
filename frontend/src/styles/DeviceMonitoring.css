@@ -1,0 +1,15 @@
+.device-monitoring-paper {
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.device-monitoring-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.device-monitoring-date-picker {
+  width: 200px;
+}

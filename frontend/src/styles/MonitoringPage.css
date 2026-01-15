@@ -1,0 +1,15 @@
+.monitoring-page-container {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.monitoring-error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+}
+
+.monitoring-error-text {
+    color: rgba(0, 0, 0, 0.6);
+}

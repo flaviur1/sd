@@ -1,6 +1,6 @@
 import "../styles/DeviceOperations.css";
 import { useState, useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "../axios.ts";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from "@mui/material/TextField"
 import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
 
 interface Device {
     id: string,
@@ -26,6 +27,7 @@ interface User {
 }
 
 function DeviceOperations() {
+    const navigate = useNavigate();
     const [deviceList, setDeviceList] = useState<Device[]>([]);
 
     const [manufacturerAdd, setManufacturerAdd] = useState("");
@@ -256,6 +258,7 @@ function DeviceOperations() {
                                 <TableCell align="left" sx={{ color: 'white' }}>ID</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Manufacturer</TableCell>
                                 <TableCell align="left" sx={{ color: 'white' }}>Max Consumption</TableCell>
+                                <TableCell align="center" sx={{ color: 'white' }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -267,6 +270,11 @@ function DeviceOperations() {
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.id}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.manufacturer}</TableCell>
                                     <TableCell align="left" sx={{ color: 'white' }}>{row.maxConsVal}</TableCell>
+                                    <TableCell align="center">
+                                        <Button variant="contained" size="small" onClick={() => navigate(`/monitoring/${row.id}`)}>
+                                            View Graph
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
