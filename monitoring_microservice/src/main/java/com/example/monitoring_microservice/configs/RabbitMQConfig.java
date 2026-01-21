@@ -19,10 +19,12 @@ public class RabbitMQConfig {
     public static final String MONITOR_DEVICE_DELETE_QUEUE = "monitor-device-delete-queue";
     public static final String MONITOR_DEVICE_UPDATE_QUEUE = "monitor-device-update-queue";
     public static final String MONITOR_SIMULATOR_QUEUE = "monitor-simulator-queue";
+     public static final String OVERCONSUMPTION_ALERT_QUEUE = "overconsumption-alert-queue";
     public static final String DEVICE_CREATED_ROUTING_KEY = "sync.device.created";
     public static final String DEVICE_DELETED_ROUTING_KEY = "sync.device.deleted";
     public static final String DEVICE_UPDATED_ROUTING_KEY = "sync.device.updated";
     public static final String SIMULATOR_ROUTING_KEY = "sync.monitor.generated";
+    public static final String ALERT_ROUTING_KEY = "alert.overconsumption";
 
     @Bean
     public TopicExchange syncExchange() {

@@ -112,6 +112,34 @@ services:
     ports:
       - "5436:5432"
 
+  websocket-chat-microservice:
+    image: websocket-chat-service:latest
+    container_name: websocket-chat-service
+    environment:
+      DB_IP: db-chat
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DBNAME: chatDB
+    networks:
+      - proxy-network
+      - chat-db-network
+    depends_on:
+      - db-chat
+      - rabbitmq
+
+  db-chat:
+    image: postgres
+    container_name: db-chat
+    environment:
+      POSTGRES_DB: chatDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    networks:
+      - chat-db-network
+    ports:
+      - "5437:5432"
+
   frontend:
     build: ./frontend
     container_name: frontend
@@ -163,4 +191,6 @@ networks:
   auth-db-network:
     driver: bridge
   monitoring-db-network:
+    driver: bridge
+  chat-db-network:
     driver: bridge
