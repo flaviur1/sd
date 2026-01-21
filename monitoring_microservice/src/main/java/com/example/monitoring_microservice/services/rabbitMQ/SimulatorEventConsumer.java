@@ -34,7 +34,7 @@ public class SimulatorEventConsumer {
             );
 
             EnergyReading savedReading = energyReadingRepository.save(reading);
-            logger.info("Saved energy reading: deviceId={}, timestamp={}, value={}",savedReading.getDeviceId(), savedReading.getTimestamp(), savedReading.getConsumptionValue());
+            logger.info("Saved energy reading: deviceId={}, timestamp={}, value={}", savedReading.getDeviceId(), savedReading.getTimestamp(), savedReading.getConsumptionValue());
 
             messagingTemplate.convertAndSend("/topic/energy-readings", savedReading);
             logger.info("Broadcasted energy reading to /topic/energy-readings");

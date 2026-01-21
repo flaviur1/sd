@@ -30,21 +30,6 @@ public class EnergyReadingController {
 
     @GetMapping("/{id}/{date}")
     public ResponseEntity<?> getMonitorDataForDevice(@PathVariable UUID id, @PathVariable LocalDate date) {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // if (authentication == null || !(authentication.getPrincipal() instanceof UUID)) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("user not authenticated");
-        // }
-        // UUID userId = (UUID) authentication.getPrincipal();
-        // Optional<Device> deviceOpt = deviceRepository.findById(id);
-        // if (deviceOpt.isEmpty()) {
-        //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("device not found");
-        // }
-        // Device device = deviceOpt.get();
-        // if (!device.getUserId().equals(userId)) {
-        //     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("device does not belong to user");
-        // }
-        
-
         return ResponseEntity.ok(energyReadingService.getMonitorDataForDevice(id, date));
     }
 }
