@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class OverconsumptionAlert {
     private UUID deviceId;
+    private UUID userId;
     private LocalDateTime timestamp;
     private Double actualConsumption;
     private int threshold;
@@ -12,8 +13,9 @@ public class OverconsumptionAlert {
     public OverconsumptionAlert() {
     }
 
-    public OverconsumptionAlert(UUID deviceId, LocalDateTime timestamp, Double actualConsumption, int threshold) {
+    public OverconsumptionAlert(UUID deviceId, UUID userId, LocalDateTime timestamp, Double actualConsumption, int threshold) {
         this.deviceId = deviceId;
+        this.userId = userId;
         this.timestamp = timestamp;
         this.actualConsumption = actualConsumption;
         this.threshold = threshold;
@@ -25,6 +27,14 @@ public class OverconsumptionAlert {
 
     public void setDeviceId(UUID deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getTimestamp() {

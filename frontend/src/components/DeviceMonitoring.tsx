@@ -84,7 +84,7 @@ const DeviceMonitoring = ({ deviceId }: DeviceMonitoringProps) => {
         client.debug = () => { };
 
         client.onConnect = () => {
-            console.log("WebSocket connected");
+            console.log("WebSocket for energy readings connected");
 
             client.subscribe("/topic/energy-readings", (message) => {
                 const reading: EnergyReading = JSON.parse(message.body);
@@ -105,7 +105,7 @@ const DeviceMonitoring = ({ deviceId }: DeviceMonitoringProps) => {
         return () => {
             if (stompClientRef.current) {
                 stompClientRef.current.deactivate();
-                console.log("WebSocket disconnected");
+                console.log("WebSocket for energy readings disconnected");
             }
         };
     }, [deviceId]);

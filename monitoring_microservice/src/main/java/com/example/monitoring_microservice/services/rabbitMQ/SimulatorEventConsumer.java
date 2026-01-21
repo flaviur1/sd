@@ -72,6 +72,7 @@ public class SimulatorEventConsumer {
             if (actualConsumption > maxConsVal) {
                 OverconsumptionAlert alert = new OverconsumptionAlert(
                     message.getDeviceId(),
+                    device.getUserId(),
                     message.getTimestamp(),
                     actualConsumption,
                     maxConsVal
