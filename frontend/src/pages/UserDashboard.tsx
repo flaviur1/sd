@@ -1,5 +1,6 @@
 import "../styles/UserDashboard.css"
 import { useEffect, useState } from "react";
+import ChatWidget from '../components/ChatWidget';
 import { useNavigate } from "react-router-dom";
 import axios from "../axios.ts";
 import Table from '@mui/material/Table';
@@ -97,6 +98,8 @@ function UserDashboard() {
                     </Table>
                 </TableContainer>
             </div>
+            
+            <ChatWidget />
         </div >
     );
 }
