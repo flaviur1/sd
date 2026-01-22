@@ -21,7 +21,7 @@ public class ChatMessage {
     @Column(nullable = false)
     private UUID sessionId;
     
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String message;
     
     @Column(nullable = false)

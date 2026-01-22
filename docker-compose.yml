@@ -121,6 +121,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: admin
       DB_DBNAME: chatDB
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     networks:
       - proxy-network
       - chat-db-network
