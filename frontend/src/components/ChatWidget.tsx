@@ -10,6 +10,7 @@ import {
     TypingIndicator,
 } from '@chatscope/chat-ui-kit-react';
 import { Client } from '@stomp/stompjs';
+import axios from '../axios.ts';
 
 interface ChatMessage {
     message: string;
@@ -35,6 +36,8 @@ function ChatWidget() {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
+        loadChatHistory();
+
         const client = new Client({
             brokerURL: 'ws://localhost/api/ws/monitoring',
             reconnectDelay: 5000,
@@ -94,6 +97,34 @@ function ChatWidget() {
         }
     };
 
+    const loadChatHistory = async () => {
+        const userId = getUserIdFromToken();
+        if (!userId) return;
+
+        try {
+            const sessionsResponse = await axios.get('/chat/sessions');
+            const userSession = sessionsResponse.data.find((s: any) => s.userId === userId);
+            
+            if (userSession) {
+                const historyResponse = await axios.get(`/chat/messages/${userSession.sessionId}`);
+                
+                const historyMessages: ChatMessage[] = historyResponse.data.map((msg: any) => ({
+                    message: msg.message,
+                    sentTime: msg.timestamp,
+                    sender: msg.sender === 'USER' ? 'You' : (msg.sender === 'ADMIN' ? 'Admin' : 'Bot'),
+                    direction: msg.sender === 'USER' ? 'outgoing' : 'incoming',
+                    position: 'single'
+                }));
+
+                if (historyMessages.length > 0) {
+                    setMessages(historyMessages);
+                }
+            }
+        } catch (error) {
+            console.log('No chat history or error loading:', error);
+        }
+    };
+
     const handleSend = async (message: string) => {
         const userId = getUserIdFromToken();
         
@@ -116,7 +147,10 @@ function ChatWidget() {
         };
 
         setMessages(prev => [...prev, newMessage]);
-        setIsTyping(true);
+
+        if (message.trim().toUpperCase() !== "CONNECT") {
+            setIsTyping(true);
+        }
 
         const payload = {
             message,

@@ -76,6 +76,16 @@ http:
       service: websocket-chat-microservice
       priority: 150
 
+    chat-router:
+      rule: "Host(`localhost`) && PathPrefix(`/api/chat`)"
+      entryPoints:
+        - web
+      middlewares:
+        - forward-auth
+        - strip-api-prefix
+      service: websocket-chat-microservice
+      priority: 150
+
     frontend-router:
       rule: "Host(`localhost`) && PathPrefix(`/`)"
       entryPoints:

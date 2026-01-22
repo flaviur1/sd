@@ -1,0 +1,80 @@
+.admin-chat-panel {
+    display: flex;
+    height: 85vh;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.sessions-list {
+    width: 300px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.sessions-list h3 {
+    color: #fff;
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+}
+
+.no-sessions {
+    color: #999;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.session-item {
+    background: #363636;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.session-item:hover {
+    background: #404040;
+}
+
+.session-item.selected {
+    background: #9c27b0;
+}
+
+.session-user {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.session-preview {
+    color: #bbb;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.25rem;
+}
+
+.session-time {
+    color: #888;
+    font-size: 0.75rem;
+}
+
+.chat-area {
+    flex: 1;
+    background: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.no-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #999;
+    font-size: 1.1rem;
+}

@@ -4,6 +4,8 @@ import com.example.websocket_and_chat_microservice.entities.ChatSession;
 import com.example.websocket_and_chat_microservice.repositories.ChatSessionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,5 +29,17 @@ public class ChatSessionService {
         return chatSessionRepository.findByUserId(userId)
             .map(ChatSession::isAdminActive)
             .orElse(false);
+    }
+    
+    public List<ChatSession> getActiveSessions() {
+        return chatSessionRepository.findByAdminActiveTrue();
+    }
+    
+    public Optional<ChatSession> getSessionById(UUID sessionId) {
+        return chatSessionRepository.findById(sessionId);
+    }
+    
+    public ChatSession saveSession(ChatSession session) {
+        return chatSessionRepository.save(session);
     }
 }
